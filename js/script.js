@@ -1,6 +1,28 @@
 const topBar = document.querySelector(".top-bar");
 const statsSection = document.querySelector(".info-band-section");
 const statValues = document.querySelectorAll(".info-band-value[data-count]");
+const menuToggle = document.querySelector(".menu-toggle");
+const topBarMenu = document.getElementById("top-bar-menu");
+
+if (menuToggle && topBarMenu) {
+  const setOpen = (isOpen) => {
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    topBarMenu.classList.toggle("is-open", isOpen);
+  };
+
+  menuToggle.addEventListener("click", () => {
+    const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+    setOpen(!isOpen);
+  });
+
+  topBarMenu.addEventListener("click", (event) => {
+    if (event.target.tagName === "A") setOpen(false);
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 700) setOpen(false);
+  });
+}
 
 if (topBar) {
   const syncTopBarState = () => {

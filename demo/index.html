@@ -17,7 +17,8 @@
   </head>
   <body>
     <header class="top-bar">
-      <div class="top-bar-shell top-bar-inner">
+      <div class="top-bar-shell">
+       <div class="top-bar-inner">
         <div class="top-bar-left">
           <a class="brand" href="../">
             <svg
@@ -61,6 +62,22 @@
           </nav>
         </div>
         <a class="login-button" href="../">Back Home</a>
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+          aria-controls="top-bar-menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <div class="top-bar-menu" id="top-bar-menu">
+          <a href="../">Overview</a>
+          <a href="../">Warning Signs</a>
+          <a href="../">Protection</a>
+          <a href="../" class="top-bar-menu-login">Back Home</a>
+        </div>
+       </div>
       </div>
     </header>
 
