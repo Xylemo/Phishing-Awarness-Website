@@ -13,9 +13,17 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../css/styles.css" />
+    <script src="../js/config.js" defer></script>
+    <script src="../js/store.js" defer></script>
     <script src="../js/script.js" defer></script>
   </head>
   <body>
+    <div class="site-loader" id="site-loader" aria-hidden="true">
+      <div class="site-loader-inner">
+        <div class="site-loader-spinner"></div>
+        <span class="site-loader-brand">Phishy</span>
+      </div>
+    </div>
     <header class="top-bar">
       <div class="top-bar-shell">
        <div class="top-bar-inner">
@@ -57,11 +65,12 @@
           </a>
           <nav class="top-nav" aria-label="Primary">
             <a href="../">Overview</a>
-            <a href="../">Warning Signs</a>
-            <a href="../">Protection</a>
+            <a href="../information/">Information</a>
+            <a href="../warning-signs/">Warning Signs</a>
+            <a href="../simulations/">Simulations</a>
           </nav>
         </div>
-        <a class="login-button" href="../">Back Home</a>
+        <a class="login-button" href="../login/">Sign in</a>
         <button
           class="menu-toggle"
           type="button"
@@ -73,9 +82,10 @@
         </button>
         <div class="top-bar-menu" id="top-bar-menu">
           <a href="../">Overview</a>
-          <a href="../">Warning Signs</a>
-          <a href="../">Protection</a>
-          <a href="../" class="top-bar-menu-login">Back Home</a>
+          <a href="../information/">Information</a>
+          <a href="../warning-signs/">Warning Signs</a>
+          <a href="../simulations/">Simulations</a>
+          <a href="../login/" class="top-bar-menu-login">Sign in</a>
         </div>
        </div>
       </div>
@@ -83,7 +93,7 @@
 
     <main class="demo-section">
       <div class="container demo-layout">
-        <!-- Demo content goes here -->
+        
       </div>
     </main>
 

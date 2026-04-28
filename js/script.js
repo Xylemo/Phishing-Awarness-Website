@@ -95,3 +95,101 @@ if (statsSection && statValues.length) {
 
   observer.observe(statsSection);
 }
+
+function syncTopbarAuth() {
+  if (!window.Phishy) return;
+  const user = window.Phishy.auth.getCurrentUser();
+  if (!user) return;
+
+  const brand = document.querySelector("a.brand");
+  const root = brand && brand.getAttribute("href") === "../" ? "../" : "";
+
+  const handleSignOut = async () => {
+    await window.Phishy.auth.signOut();
+    window.location.href = root || "./";
+  };
+
+  document.querySelectorAll(".login-button").forEach((btn) => {
+    btn.textContent = "Dashboard";
+    btn.setAttribute("href", root + "dashboard/");
+
+    const alreadyWrapped =
+      btn.parentNode &&
+      btn.parentNode.classList &&
+      btn.parentNode.classList.contains("topbar-auth-group");
+
+    if (btn.parentNode && !alreadyWrapped) {
+      const wrap = document.createElement("div");
+      wrap.className = "topbar-auth-group";
+      btn.parentNode.insertBefore(wrap, btn);
+
+      const signOut = document.createElement("button");
+      signOut.type = "button";
+      signOut.className = "topbar-signout";
+      signOut.textContent = "Logout";
+      signOut.addEventListener("click", handleSignOut);
+
+      wrap.appendChild(signOut);
+      wrap.appendChild(btn);
+    }
+  });
+
+  document.querySelectorAll(".top-bar-menu-login").forEach((link) => {
+    link.textContent = "Dashboard";
+    link.setAttribute("href", root + "dashboard/");
+
+    if (link.parentNode && !link.parentNode.querySelector(".top-bar-menu-signout")) {
+      const signOut = document.createElement("button");
+      signOut.type = "button";
+      signOut.className = "top-bar-menu-signout";
+      signOut.textContent = "Logout";
+      signOut.addEventListener("click", handleSignOut);
+      link.parentNode.appendChild(signOut);
+    }
+  });
+
+  const desktopNav = document.querySelector(".top-nav");
+  const mobileMenu = document.getElementById("top-bar-menu");
+
+  if (user.role === "admin") {
+    if (desktopNav && !desktopNav.querySelector('[data-nav="admin"]')) {
+      const a = document.createElement("a");
+      a.textContent = "Admin";
+      a.setAttribute("href", root + "admin/");
+      a.setAttribute("data-nav", "admin");
+      desktopNav.appendChild(a);
+    }
+    if (mobileMenu && !mobileMenu.querySelector('[data-nav="admin"]')) {
+      const a = document.createElement("a");
+      a.textContent = "Admin";
+      a.setAttribute("href", root + "admin/");
+      a.setAttribute("data-nav", "admin");
+      const loginLink = mobileMenu.querySelector(".top-bar-menu-login");
+      mobileMenu.insertBefore(a, loginLink);
+    }
+  }
+}
+
+if (window.Phishy) {
+  window.Phishy.ready().then(syncTopbarAuth);
+} else {
+  syncTopbarAuth();
+}
+
+const siteLoader = document.getElementById("site-loader");
+if (siteLoader) {
+  const hideLoader = () => {
+    setTimeout(() => {
+      siteLoader.classList.add("is-hidden");
+      setTimeout(() => siteLoader.remove(), 400);
+    }, 250);
+  };
+
+  const windowLoaded = new Promise((resolve) => {
+    if (document.readyState === "complete") resolve();
+    else window.addEventListener("load", resolve);
+  });
+  const phishyReady = window.Phishy ? window.Phishy.ready() : Promise.resolve();
+
+  Promise.allSettled([windowLoaded, phishyReady]).then(hideLoader);
+}

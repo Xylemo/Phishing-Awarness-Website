@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard &middot; Phishy</title>
+    <meta name="description" content="Your assigned phishing-awareness training." />
+    <link rel="icon" type="image/png" href="../assets/icon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <script src="../js/config.js" defer></script>
+    <script src="../js/store.js" defer></script>
+    <script src="../js/script.js" defer></script>
+    <script src="../js/quiz.js" defer></script>
+    <script src="../js/dashboard.js" defer></script>
+  </head>
+  <body>
+    <div class="site-loader" id="site-loader" aria-hidden="true">
+      <div class="site-loader-inner">
+        <div class="site-loader-spinner"></div>
+        <span class="site-loader-brand">Phishy</span>
+      </div>
+    </div>
+    <header class="top-bar">
+      <div class="top-bar-shell">
+       <div class="top-bar-inner">
+        <div class="top-bar-left">
+          <a class="brand" href="../">
+            <svg class="topbar-logo" viewBox="0 0 509.56 172.07" aria-label="Phishy" role="img">
+              <g>
+                <path class="logo-accent" d="M91.88,85.73c3.72,2.69,7.43,5.38,11.15,8.08-1.21,2.16-3.29,5.32-6.69,8.33-2.05,1.82-5.66,4.98-11.3,6.4-4.79,1.21-9.96.86-15.49-1.04-7.07-2.43-11.16-6.92-12.14-8.04-5.78-6.55-6.75-13.91-6.98-16.58-2.81,2.55-5.63,5.1-8.44,7.65.49,3.24,1.96,9.81,7.01,16.1,5.88,7.3,13.16,9.92,16.99,11.23,8.02,2.76,14.97,2.88,20.87,1.55,8.08-1.82,13.3-6.22,16.96-9.26,1.44-1.2,3.92-3.39,10.4-11.42,3.43-4.26,8.1-10.3,13.33-17.91-3.51,1.97-9.47,4.76-17.36,5.85-7.9,1.09-14.39.03-18.3-.92Z" />
+                <path class="logo-accent" d="M56.51,29.27c1.63-.33,3.46-.62,5.45-.81,1.92-.18,3.7-.24,5.31-.23.63-1.81,1.26-3.62,1.89-5.43,4.02-.67,7.54-3.47,8.96-7.59,2.06-5.99-1.13-12.52-7.12-14.58-5.99-2.06-12.52,1.13-14.58,7.12-1.45,4.2-.31,8.67,2.57,11.67-.83,3.29-1.65,6.57-2.48,9.86ZM64.16,8.69c1.54-1.72,4.19-1.87,5.91-.33,1.72,1.54,1.87,4.19.33,5.91-1.54,1.72-4.19,1.87-5.91.33-1.72-1.54-1.87-4.19-.33-5.91Z" />
+              </g>
+              <g class="logo-primary">
+                <path d="M184.14,125.05v-61.99h26.71c4.6,0,8.63.91,12.09,2.73,3.45,1.82,6.14,4.38,8.07,7.68,1.93,3.3,2.89,7.16,2.89,11.57s-.98,8.27-2.95,11.5c-1.97,3.23-4.73,5.73-8.28,7.49-3.55,1.76-7.68,2.64-12.4,2.64h-9.32v18.39h-16.81ZM200.95,93.6h5.91c2.97,0,5.29-.78,6.97-2.33,1.68-1.55,2.52-3.63,2.52-6.24s-.84-4.78-2.52-6.26c-1.68-1.48-4-2.23-6.97-2.23h-5.91v17.06Z" />
+                <path d="M240.06,125.05v-61.99h16.81v23.55h22.3v-23.55h16.81v61.99h-16.81v-24.88h-22.3v24.88h-16.81Z" />
+                <path d="M320.76,63.06v61.99h-16.81v-61.99h16.81Z" />
+                <path d="M353.96,125.8c-5.38,0-10.07-.8-14.08-2.39-4.01-1.6-7.12-4.06-9.34-7.38s-3.34-7.59-3.37-12.77h15.97c.14,2.86,1.12,5.03,2.95,6.51,1.83,1.48,4.37,2.23,7.61,2.23,2.69,0,4.74-.49,6.14-1.48,1.4-.98,2.1-2.24,2.1-3.76,0-1.39-.69-2.55-2.08-3.49-1.39-.94-3.8-1.77-7.24-2.5l-6.24-1.33c-5.46-1.16-9.77-3.15-12.92-5.97-3.15-2.81-4.72-6.65-4.72-11.5,0-3.94,1.07-7.38,3.2-10.34,2.13-2.95,5.08-5.26,8.84-6.91,3.76-1.65,8.09-2.48,13-2.48s9.35.84,13,2.52c3.65,1.68,6.46,4.04,8.45,7.07,1.98,3.04,2.99,6.58,3.02,10.63h-16.14c-.14-2.02-.88-3.6-2.23-4.72s-3.38-1.68-6.09-1.68-4.51.44-5.7,1.33-1.79,2.02-1.79,3.41c0,1.47.65,2.66,1.96,3.58,1.3.92,3.43,1.69,6.37,2.33l5.08,1.08c6.85,1.44,11.79,3.79,14.83,7.03s4.56,7.22,4.56,11.94c0,6.13-2.23,10.84-6.68,14.12-4.45,3.29-10.6,4.93-18.45,4.93Z" />
+                <path d="M385.5,125.05v-61.99h16.81v23.55h22.3v-23.55h16.81v61.99h-16.81v-24.88h-22.3v24.88h-16.81Z" />
+                <path d="M470.41,125.05v-21.55l-23.09-40.44h19.76l8.94,18.72c.55,1.14,1.06,2.29,1.52,3.45s.89,2.4,1.31,3.7c.8-2.64,1.69-5.02,2.66-7.16l8.36-18.72h19.68l-22.42,40.44v21.55h-16.72Z" />
+              </g>
+              <path class="logo-primary" d="M36.27,42.96c-5.64,3.22-29.71,16.98-35.16,43.08-3.72,17.8,2.76,32.61,6.37,40.82,11.84,26.92,34.33,40.3,43.81,45.2-1.38-2.84-6.84-14.9-1.82-27.08,2.16-5.24,5.39-8.37,6.09-9.02,8.19-7.73,19-7.2,21.46-7.02-8.16-5.5-19.29-10.78-31.29-8.72-8.71,1.49-13.19,6.04-17.04,3.51-5.41-3.55-3.06-18.15,1.74-27.44,5.86-11.34,17.38-18.59,20.26-20.41.39-.25.62-.4.97-.59,8.11-4.27,19.31-4.45,25.42.9h0s0,0,0,0c.38.34.72.66,1.02.94.4-3.71,2.3-17.07,12.92-23.9,1.4-.9,3.07-1.77,5.07-2.46-8.75,8.7-11.91,18.54-8.51,24.11,3.22,5.28,11.55,5.43,15.6,5.51,21.42.38,38.09-16.8,44.43-24.11-37.49-24.81-80.46-30.98-111.35-13.32ZM126.99,61.61c-2.4,2.68-6.52,2.91-9.2.51-2.68-2.4-2.91-6.52-.51-9.2,2.4-2.68,6.52-2.91,9.2-.51,2.68,2.4,2.91,6.52.51,9.2Z" />
+            </svg>
+          </a>
+          <nav class="top-nav" aria-label="Primary">
+            <a href="../">Overview</a>
+            <a href="../information/">Information</a>
+            <a href="../warning-signs/">Warning Signs</a>
+            <a href="../simulations/">Simulations</a>
+          </nav>
+        </div>
+        <a class="login-button" href="./">Dashboard</a>
+        <button class="menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="top-bar-menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="top-bar-menu" id="top-bar-menu">
+          <a href="../">Overview</a>
+          <a href="../information/">Information</a>
+          <a href="../warning-signs/">Warning Signs</a>
+          <a href="../simulations/">Simulations</a>
+          <a href="./" class="top-bar-menu-login">Dashboard</a>
+        </div>
+       </div>
+      </div>
+    </header>
+
+    <main class="dashboard-section">
+      <div class="container dashboard-layout" id="dashboard-root">
+        <p class="dashboard-loading">Loading your training...</p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer-inner">
+        <p class="site-footer-copy">&copy; 2026 Phishy. All rights reserved.</p>
+        <a class="site-footer-link" href="https://github.com/Xylemo/Phishing-Awarness-Website" target="_blank" rel="noopener noreferrer">
+          <svg class="site-footer-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 .5C5.73.5.75 5.48.75 11.75c0 4.97 3.22 9.18 7.69 10.67.56.1.77-.24.77-.54 0-.27-.01-1.15-.02-2.08-3.13.68-3.79-1.33-3.79-1.33-.51-1.29-1.25-1.64-1.25-1.64-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.08 1.15a10.66 10.66 0 015.6 0c2.14-1.45 3.08-1.15 3.08-1.15.61 1.54.23 2.68.11 2.96.72.79 1.16 1.79 1.16 3.02 0 4.32-2.64 5.27-5.15 5.55.4.35.76 1.03.76 2.08 0 1.5-.01 2.71-.01 3.08 0 .3.2.65.78.54 4.46-1.49 7.68-5.7 7.68-10.67C23.25 5.48 18.27.5 12 .5z" />
+          </svg>
+          <span>View on GitHub</span>
+        </a>
+      </div>
+    </footer>
+  </body>
+</html>
