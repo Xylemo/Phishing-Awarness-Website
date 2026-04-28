@@ -39,7 +39,7 @@ if (form) {
         }
         return;
       }
-      const next = user.role === "admin" ? "../admin/" : "../dashboard/";
+      const next = user.role === "admin" ? "../company/" : "../dashboard/";
       window.location.href = next;
     } catch (err) {
       if (errorBox) {

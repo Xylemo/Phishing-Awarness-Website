@@ -162,6 +162,19 @@ const progress = document.getElementById("sim-progress");
 let index = 0;
 let score = 0;
 let answered = false;
+let simRunId = null;
+const SIM_ID = "spot_the_phishing";
+
+function startSimRun() {
+  simRunId = null;
+  if (window.Phishy && window.Phishy.analytics) {
+    window.Phishy.analytics
+      .startSimulation(SIM_ID)
+      .then((r) => { simRunId = r && r.runId; })
+      .catch(() => {});
+  }
+}
+startSimRun();
 
 function escapeHtml(str) {
   return str
@@ -372,6 +385,14 @@ function answer(userPickedPhishing) {
   const scenario = scenarios[index];
   const correct = userPickedPhishing === scenario.isPhishing;
   if (correct) score += 1;
+  if (window.Phishy && window.Phishy.analytics) {
+    window.Phishy.analytics.recordAnswer(
+      simRunId,
+      `${SIM_ID}:${index}`,
+      userPickedPhishing ? "phishing" : "safe",
+      correct
+    );
+  }
 
   closeEmailMenus(stage);
   stage.classList.add("sim-stage-answered");
@@ -416,12 +437,8 @@ function finish() {
   actions.hidden = true;
   progress.hidden = true;
 
-  if (window.Phishy && window.Phishy.store && window.Phishy.store.logSimulationRun) {
-    window.Phishy.store.logSimulationRun({
-      simulation: "spot_the_phishing",
-      score,
-      total: scenarios.length,
-    });
+  if (window.Phishy && window.Phishy.analytics) {
+    window.Phishy.analytics.finishSimulation(simRunId, score, scenarios.length);
   }
 
   completeScore.textContent = `You scored ${score} out of ${scenarios.length}.`;
@@ -448,6 +465,7 @@ function restart() {
   score = 0;
   complete.hidden = true;
   progress.hidden = false;
+  startSimRun();
   showScenario();
 }
 
@@ -531,8 +549,8 @@ function renderStatus() {
   ).length;
   const total = assignments.length;
   const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
-  const dashHref = user.role === "admin" ? "../admin/" : "../dashboard/";
-  const dashLabel = user.role === "admin" ? "Open admin panel" : "Open dashboard";
+  const dashHref = user.role === "admin" ? "../company/" : "../dashboard/";
+  const dashLabel = user.role === "admin" ? "Open company panel" : "Open dashboard";
 
   statusEl.innerHTML = `
     <header class="page-hero-card-head">

@@ -51,10 +51,19 @@
 
     function run(container, questions, options) {
         const opts = options || {};
+        const simulationId = opts.simulationId || "quiz";
         const total = questions.length;
         let index = 0;
         let score = 0;
         let answered = false;
+        let runId = null;
+
+        if (window.Phishy && window.Phishy.analytics) {
+            window.Phishy.analytics
+                .startSimulation(simulationId)
+                .then((r) => { runId = r && r.runId; })
+                .catch(() => {});
+        }
 
         container.innerHTML = `
       <div class="quiz-shell">
@@ -118,6 +127,14 @@
             const q = questions[index];
             const correct = chose === q.isPhishing;
             if (correct) score += 1;
+            if (window.Phishy && window.Phishy.analytics) {
+                window.Phishy.analytics.recordAnswer(
+                    runId,
+                    `${simulationId}:${index}`,
+                    chose ? "phishing" : "safe",
+                    correct
+                );
+            }
             phishingBtn.disabled = true;
             safeBtn.disabled = true;
             actions.hidden = true;
@@ -157,10 +174,20 @@
             restartBtn.addEventListener("click", () => {
                 index = 0;
                 score = 0;
+                runId = null;
+                if (window.Phishy && window.Phishy.analytics) {
+                    window.Phishy.analytics
+                        .startSimulation(simulationId)
+                        .then((r) => { runId = r && r.runId; })
+                        .catch(() => {});
+                }
                 progressEl.hidden = false;
                 complete.hidden = true;
                 show();
             });
+            if (window.Phishy && window.Phishy.analytics) {
+                window.Phishy.analytics.finishSimulation(runId, score, total);
+            }
             if (typeof opts.onComplete === "function") {
                 opts.onComplete({
                     score,

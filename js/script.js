@@ -33,6 +33,17 @@ if (topBar) {
   window.addEventListener("scroll", syncTopBarState, { passive: true });
 }
 
+async function loadLiveStats() {
+  if (!statValues.length || !window.Phishy || !window.Phishy.analytics) return;
+  try {
+    const stats = await window.Phishy.analytics.publicStats();
+    statValues.forEach((el) => {
+      const key = el.dataset.stat;
+      if (key && stats[key] != null) el.dataset.count = String(stats[key]);
+    });
+  } catch (_) {}
+}
+
 if (statsSection && statValues.length) {
   const formatValue = (value) => new Intl.NumberFormat("en-US").format(value);
   const animationFrameIds = new WeakMap();
@@ -79,11 +90,19 @@ if (statsSection && statValues.length) {
     element.textContent = "0";
   };
 
+  let liveLoaded = false;
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          statValues.forEach((value) => animateValue(value));
+          const start = () =>
+            statValues.forEach((value) => animateValue(value));
+          if (liveLoaded) {
+            start();
+          } else {
+            liveLoaded = true;
+            loadLiveStats().finally(start);
+          }
           return;
         }
 
@@ -109,9 +128,11 @@ function syncTopbarAuth() {
     window.location.href = root || "./";
   };
 
+  const dashHref = root + (user.role === "admin" ? "company/" : "dashboard/");
+
   document.querySelectorAll(".login-button").forEach((btn) => {
     btn.textContent = "Dashboard";
-    btn.setAttribute("href", root + "dashboard/");
+    btn.setAttribute("href", dashHref);
 
     const alreadyWrapped =
       btn.parentNode &&
@@ -136,7 +157,7 @@ function syncTopbarAuth() {
 
   document.querySelectorAll(".top-bar-menu-login").forEach((link) => {
     link.textContent = "Dashboard";
-    link.setAttribute("href", root + "dashboard/");
+    link.setAttribute("href", dashHref);
 
     if (link.parentNode && !link.parentNode.querySelector(".top-bar-menu-signout")) {
       const signOut = document.createElement("button");
@@ -148,25 +169,12 @@ function syncTopbarAuth() {
     }
   });
 
-  const desktopNav = document.querySelector(".top-nav");
-  const mobileMenu = document.getElementById("top-bar-menu");
-
-  if (user.role === "admin") {
-    if (desktopNav && !desktopNav.querySelector('[data-nav="admin"]')) {
-      const a = document.createElement("a");
-      a.textContent = "Admin";
-      a.setAttribute("href", root + "admin/");
-      a.setAttribute("data-nav", "admin");
-      desktopNav.appendChild(a);
-    }
-    if (mobileMenu && !mobileMenu.querySelector('[data-nav="admin"]')) {
-      const a = document.createElement("a");
-      a.textContent = "Admin";
-      a.setAttribute("href", root + "admin/");
-      a.setAttribute("data-nav", "admin");
-      const loginLink = mobileMenu.querySelector(".top-bar-menu-login");
-      mobileMenu.insertBefore(a, loginLink);
-    }
+  // Signed-in employees: route the "Simulations" nav link to their dashboard
+  // (admins keep the public /simulations/ link for previewing as an employee).
+  if (user.role !== "admin") {
+    document.querySelectorAll('a[href$="simulations/"], a[href$="../simulations/"]').forEach((link) => {
+      link.setAttribute("href", root + "dashboard/");
+    });
   }
 }
 
