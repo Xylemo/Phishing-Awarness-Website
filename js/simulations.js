@@ -1,113 +1,106 @@
-const scenarios = [
-  {
-    type: "sms",
-    sender: "+1 (737) 555-0142",
-    body:
-      "USPS: Your package could not be delivered due to an incomplete address. " +
-      "Please confirm your details and pay the $2.99 redelivery fee at " +
-      "usps-redelivery-portal.cc/track to avoid return.",
-    isPhishing: true,
-    explain: "USPS doesn't text for redelivery fees. The link is a lookalike on a sketchy .cc domain.",
-  },
-  {
-    type: "email",
-    fromName: "GitHub",
-    fromAddress: "noreply@github.com",
-    subject: "[GitHub] A new SSH key was added to your account",
-    body:
-      "Hey Guest,\n\nA new SSH key was added to your account.\n\n" +
-      "If you didn't add this key, you can remove it and reset your password " +
-      "by visiting https://github.com/settings/keys.\n\nThanks,\nThe GitHub Team",
-    isPhishing: false,
-    explain: "Sender and link are both github.com. It tells you what to do if it wasn't you, instead of demanding action.",
-  },
-  {
-    type: "sms",
-    sender: "+1 (415) 555-0199",
-    body:
-      "Bank of Amrica Alert: We detected unusual activity on your card. " +
-      "Verify your identity now to avoid a freeze: bankofamerica-secure.support/verify",
-    isPhishing: true,
-    explain: "\"Amrica\" is misspelled and the link is a lookalike domain. Banks don't verify identity through SMS links.",
-  },
-  {
-    type: "email",
-    fromName: "Apple Support",
-    fromAddress: "support@apple-id-verify.com",
-    subject: "Your Apple ID has been locked",
-    body:
-      "Dear Customer,\n\nYour Apple ID has been temporarily locked due to " +
-      "suspicious activity. To restore access, you must verify your account " +
-      "within 24 hours or it will be permanently disabled.\n\n" +
-      "Click here to verify: http://apple-id-verify.com/unlock\n\n" +
-      "Apple Support Team",
-    isPhishing: true,
-    explain: "Sender isn't apple.com, greeting is generic, and the 24-hour disablement threat is pure pressure.",
-  },
-  {
-    type: "sms",
-    sender: "729-725 (Verify)",
-    body: "Your Google verification code is 482917. Do not share this code with anyone.",
-    isPhishing: false,
-    explain: "Real Google short code, no link, and a clear \"don't share\" warning. Normal 2FA.",
-  },
-  {
-    type: "email",
-    fromName: "Mark Stevens, CEO",
-    fromAddress: "mark.stevens.ceo@gmail.com",
-    subject: "Quick favor - need this done before my flight",
-    body:
-      "Hi,\n\nI'm boarding a flight in 20 minutes and need a favor. Can you " +
-      "pick up five $200 Apple gift cards for a client thank-you? Scratch off " +
-      "the backs and email me the codes ASAP. I'll reimburse you when I land.\n\n" +
-      "Thanks,\nMark",
-    isPhishing: true,
-    explain: "CEO whaling. Personal gmail address, urgency, and gift cards — textbook scam.",
-  },
-  {
-    type: "sms",
-    sender: "+1 (302) 555-0173",
-    body:
-      "Congrats! You've been selected for a $1,000 Amazon gift card. " +
-      "Claim within 24 hours: amzn-rewards.top/claim?id=8821",
-    isPhishing: true,
-    explain: "Unsolicited prize + 24-hour deadline + lookalike .top domain = scam.",
-  },
-  {
-    type: "email",
-    fromName: "Spotify",
-    fromAddress: "no-reply@spotify.com",
-    subject: "Your June receipt from Spotify",
-    body:
-      "Hi Leo,\n\nThanks for being a Premium member. Your subscription " +
-      "renewed on June 1 for $10.99. View your receipt or manage your plan " +
-      "anytime at spotify.com/account.\n\n- The Spotify team",
-    isPhishing: false,
-    explain: "Sender and link are spotify.com. Named greeting, no urgency — a normal receipt.",
-  },
-  {
-    type: "email",
-    fromName: "DocuSign",
-    fromAddress: "service@docu-sign-secure.net",
-    subject: "Document waiting for your signature",
-    body:
-      "Hello,\n\nYou have a confidential document awaiting your signature. " +
-      "It will expire in 24 hours.\n\nView and sign now: " +
-      "http://docu-sign-secure.net/sign/x8H22\n\nDocuSign Service Team",
-    isPhishing: true,
-    explain: "Real DocuSign uses docusign.com, not a hyphenated lookalike. Generic greeting + 24-hour expiry seals it.",
-  },
-  {
-    type: "sms",
-    sender: "AA-FLT (24411)",
-    body:
-      "American Airlines: Your flight AA1283 to DFW is now departing from " +
-      "Gate C12. Boarding at 14:30. View your boarding pass in the app.",
-    isPhishing: false,
-    explain: "Registered short code, specific flight info, no link — the legit airline pattern.",
-  },
+// All simulation scenarios
+const scenarios = [{
+        type: "sms",
+        sender: "+1 (737) 555-0142",
+        body: "USPS: Your package could not be delivered due to an incomplete address. " +
+            "Please confirm your details and pay the $2.99 redelivery fee at " +
+            "usps-redelivery-portal.cc/track to avoid return.",
+        isPhishing: true,
+        explain: "USPS doesn't text for redelivery fees. The link is a lookalike on a sketchy .cc domain.",
+    },
+    {
+        type: "email",
+        fromName: "GitHub",
+        fromAddress: "noreply@github.com",
+        subject: "[GitHub] A new SSH key was added to your account",
+        body: "Hey Guest,\n\nA new SSH key was added to your account.\n\n" +
+            "If you didn't add this key, you can remove it and reset your password " +
+            "by visiting https://github.com/settings/keys.\n\nThanks,\nThe GitHub Team",
+        isPhishing: false,
+        explain: "Sender and link are both github.com. It tells you what to do if it wasn't you, instead of demanding action.",
+    },
+    {
+        type: "sms",
+        sender: "+1 (415) 555-0199",
+        body: "Bank of Amrica Alert: We detected unusual activity on your card. " +
+            "Verify your identity now to avoid a freeze: bankofamerica-secure.support/verify",
+        isPhishing: true,
+        explain: "\"Amrica\" is misspelled and the link is a lookalike domain. Banks don't verify identity through SMS links.",
+    },
+    {
+        type: "email",
+        fromName: "Apple Support",
+        fromAddress: "support@apple-id-verify.com",
+        subject: "Your Apple ID has been locked",
+        body: "Dear Customer,\n\nYour Apple ID has been temporarily locked due to " +
+            "suspicious activity. To restore access, you must verify your account " +
+            "within 24 hours or it will be permanently disabled.\n\n" +
+            "Click here to verify: http://apple-id-verify.com/unlock\n\n" +
+            "Apple Support Team",
+        isPhishing: true,
+        explain: "Sender isn't apple.com, greeting is generic, and the 24-hour disablement threat is pure pressure.",
+    },
+    {
+        type: "sms",
+        sender: "729-725 (Verify)",
+        body: "Your Google verification code is 482917. Do not share this code with anyone.",
+        isPhishing: false,
+        explain: "Real Google short code, no link, and a clear \"don't share\" warning. Normal 2FA.",
+    },
+    {
+        type: "email",
+        fromName: "Mark Stevens, CEO",
+        fromAddress: "mark.stevens.ceo@gmail.com",
+        subject: "Quick favor - need this done before my flight",
+        body: "Hi,\n\nI'm boarding a flight in 20 minutes and need a favor. Can you " +
+            "pick up five $200 Apple gift cards for a client thank you? Scratch off " +
+            "the backs and email me the codes ASAP. I'll reimburse you when I land.\n\n" +
+            "Thanks,\nMark",
+        isPhishing: true,
+        explain: "CEO whaling. Personal gmail address, urgency, and gift cards, textbook scam.",
+    },
+    {
+        type: "sms",
+        sender: "+1 (302) 555-0173",
+        body: "Congrats! You've been selected for a $1,000 Amazon gift card. " +
+            "Claim within 24 hours: amzn-rewards.top/claim?id=8821",
+        isPhishing: true,
+        explain: "Unsolicited prize + 24-hour deadline + lookalike .top domain = scam.",
+    },
+    {
+        type: "email",
+        fromName: "Spotify",
+        fromAddress: "no-reply@spotify.com",
+        subject: "Your June receipt from Spotify",
+        body: "Hi Leo,\n\nThanks for being a Premium member. Your subscription " +
+            "renewed on June 1 for $10.99. View your receipt or manage your plan " +
+            "anytime at spotify.com/account.\n\n- The Spotify team",
+        isPhishing: false,
+        explain: "Sender and link are spotify.com. Named greeting, no urgency, a normal receipt.",
+    },
+    {
+        type: "email",
+        fromName: "DocuSign",
+        fromAddress: "service@docu-sign-secure.net",
+        subject: "Document waiting for your signature",
+        body: "Hello,\n\nYou have a confidential document awaiting your signature. " +
+            "It will expire in 24 hours.\n\nView and sign now: " +
+            "http://docu-sign-secure.net/sign/x8H22\n\nDocuSign Service Team",
+        isPhishing: true,
+        explain: "Real DocuSign uses docusign.com, not a hyphenated lookalike. Generic greeting + 24-hour expiry seals it.",
+    },
+    {
+        type: "sms",
+        sender: "AA-FLT (24411)",
+        body: "American Airlines: Your flight AA1283 to DFW is now departing from " +
+            "Gate C12. Boarding at 14:30. View your boarding pass in the app.",
+        isPhishing: false,
+        explain: "Registered short code, specific flight info, no link, the legit airline pattern.",
+    },
 ];
 
+
+// Loading all elements needed for simulation
 const stage = document.getElementById("sim-stage");
 const counter = document.getElementById("sim-counter");
 const progressFill = document.getElementById("sim-progress-fill");
@@ -129,96 +122,99 @@ let answered = false;
 let simRunId = null;
 const SIM_ID = "spot_the_phishing";
 
+// Data sending
 function startSimRun() {
-  simRunId = null;
-  if (window.Phishy && window.Phishy.analytics) {
-    window.Phishy.analytics
-      .startSimulation(SIM_ID)
-      .then((r) => { simRunId = r && r.runId; })
-      .catch(() => {});
-  }
+    simRunId = null;
+    if (window.Phishy && window.Phishy.analytics) {
+        window.Phishy.analytics
+            .startSimulation(SIM_ID)
+            .then((r) => {
+                simRunId = r && r.runId;
+            })
+            .catch(() => {});
+    }
 }
 startSimRun();
 
 function escapeHtml(str) {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
 
 function avatarInitial(label) {
-  return escapeHtml(String(label || "?").trim().charAt(0).toUpperCase() || "?");
+    return escapeHtml(String(label || "?").trim().charAt(0).toUpperCase() || "?");
 }
 
 function emailSnippet(text) {
-  return escapeHtml(String(text || "").replace(/\s+/g, " ").trim()).slice(0, 96);
+    return escapeHtml(String(text || "").replace(/\s+/g, " ").trim()).slice(0, 96);
 }
 
 function renderActions(scenario) {
-  if (scenario.type === "url") {
-    return `
+    if (scenario.type === "url") {
+        return `
       <button class="demo-button demo-button-danger" type="button" data-answer="phishing">Phishing</button>
       <button class="demo-button demo-button-safe" type="button" data-answer="safe">Safe</button>
     `;
-  }
+    }
 
-  return `
+    return `
     <button class="demo-button demo-button-safe" type="button" data-answer="safe">Continue Safe</button>
   `;
 }
 
 function closeEmailMenus(root) {
-  (root || document).querySelectorAll(".sim-email-menu.is-open").forEach(menu => {
-    menu.classList.remove("is-open");
-    const toggle = menu.querySelector(".sim-email-menu-toggle");
-    if (toggle) toggle.setAttribute("aria-expanded", "false");
-  });
+    (root || document).querySelectorAll(".sim-email-menu.is-open").forEach(menu => {
+        menu.classList.remove("is-open");
+        const toggle = menu.querySelector(".sim-email-menu-toggle");
+        if (toggle) toggle.setAttribute("aria-expanded", "false");
+    });
 }
 
 function nextLabel() {
-  return index === scenarios.length - 1 ? "See results" : "Next scenario ->";
+    return index === scenarios.length - 1 ? "See results" : "Next scenario ->";
 }
 
 function showInlineFeedback(scenario, correct) {
-  const host = scenario.type === "sms"
-    ? stage.querySelector(".sim-imessage-thread")
-    : scenario.type === "email"
-      ? stage.querySelector(".sim-email-card")
-      : stage.querySelector(".sim-url");
-  const target = scenario.type === "sms"
-    ? stage.querySelector(".sim-sms-bubble")
-    : scenario.type === "email"
-      ? stage.querySelector(".sim-email-card")
-      : stage.querySelector(".sim-url-bar");
+    const host = scenario.type === "sms" ?
+        stage.querySelector(".sim-imessage-thread") :
+        scenario.type === "email" ?
+        stage.querySelector(".sim-email-card") :
+        stage.querySelector(".sim-url");
+    const target = scenario.type === "sms" ?
+        stage.querySelector(".sim-sms-bubble") :
+        scenario.type === "email" ?
+        stage.querySelector(".sim-email-card") :
+        stage.querySelector(".sim-url-bar");
 
-  if (host) {
-    host.querySelector(".sim-inline-feedback")?.remove();
-    host.classList.add("has-inline-feedback", `has-inline-feedback-${scenario.type}`);
-  }
+    if (host) {
+        host.querySelector(".sim-inline-feedback")?.remove();
+        host.classList.add("has-inline-feedback", `has-inline-feedback-${scenario.type}`);
+    }
 
-  if (target) {
-    target.classList.add("sim-highlight-target", scenario.isPhishing ? "is-phishing" : "is-safe");
-  }
+    if (target) {
+        target.classList.add("sim-highlight-target", scenario.isPhishing ? "is-phishing" : "is-safe");
+    }
 
-  if (!host) return;
+    if (!host) return;
 
-  const overlay = document.createElement("div");
-  overlay.className = `sim-inline-feedback sim-inline-feedback-${scenario.type} ${scenario.isPhishing ? "is-phishing" : "is-safe"}`;
-  overlay.innerHTML = `
+    const overlay = document.createElement("div");
+    overlay.className = `sim-inline-feedback sim-inline-feedback-${scenario.type} ${scenario.isPhishing ? "is-phishing" : "is-safe"}`;
+    overlay.innerHTML = `
     <span class="sim-inline-feedback-badge">${scenario.isPhishing ? "Phishing" : "Safe"}</span>
     <h4>${correct ? "Correct" : "Not quite"}: this one is ${scenario.isPhishing ? "phishing" : "safe"}.</h4>
     <p>${scenario.explain}</p>
     <button class="demo-button demo-button-next sim-inline-feedback-next" type="button" data-inline-next="true">${nextLabel()}</button>
   `;
-  host.appendChild(overlay);
+    host.appendChild(overlay);
 }
 
 function renderScenario(scenario) {
-  if (scenario.type === "sms") {
-    return `
+    if (scenario.type === "sms") {
+        return `
       <div class="sim-message sim-sms">
         <div class="sim-phone-shell">
           <div class="sim-imessage-header">
@@ -239,11 +235,11 @@ function renderScenario(scenario) {
         </div>
       </div>
     `;
-  }
+    }
 
-  const bodyHtml = escapeHtml(scenario.body).replace(/\n/g, "<br />");
-  const snippet = emailSnippet(scenario.body);
-  return `
+    const bodyHtml = escapeHtml(scenario.body).replace(/\n/g, "<br />");
+    const snippet = emailSnippet(scenario.body);
+    return `
     <div class="sim-message sim-email">
       <article class="sim-email-card sim-gmail-page">
         <h3 class="sim-email-title">${escapeHtml(scenario.subject)}</h3>
@@ -270,290 +266,302 @@ function renderScenario(scenario) {
 }
 
 function updateProgress() {
-  counter.textContent = `Scenario ${index + 1} of ${scenarios.length}`;
-  const percent = (index / scenarios.length) * 100;
-  progressFill.style.width = `${percent}%`;
-  scoreLabel.textContent = `Score: ${score}`;
+    counter.textContent = `Scenario ${index + 1} of ${scenarios.length}`;
+    const percent = (index / scenarios.length) * 100;
+    progressFill.style.width = `${percent}%`;
+    scoreLabel.textContent = `Score: ${score}`;
 }
 
 const coachShown = new Set();
 const activeCoaches = [];
 
 function clampHorizontally(coach) {
-  requestAnimationFrame(() => {
-    const cr = coach.getBoundingClientRect();
-    const margin = 8;
-    let leftPx = parseFloat(coach.style.left);
-    if (cr.right > window.innerWidth - margin) {
-      leftPx -= cr.right - (window.innerWidth - margin);
-    }
-    if (cr.left < margin) {
-      leftPx += margin - cr.left;
-    }
-    coach.style.left = `${leftPx}px`;
-  });
+    requestAnimationFrame(() => {
+        const cr = coach.getBoundingClientRect();
+        const margin = 8;
+        let leftPx = parseFloat(coach.style.left);
+        if (cr.right > window.innerWidth - margin) {
+            leftPx -= cr.right - (window.innerWidth - margin);
+        }
+        if (cr.left < margin) {
+            leftPx += margin - cr.left;
+        }
+        coach.style.left = `${leftPx}px`;
+    });
 }
 
 function placeCoachBelow(coach, target) {
-  if (!target || !coach.isConnected) return;
-  const r = target.getBoundingClientRect();
-  coach.style.left = `${r.left + r.width / 2}px`;
-  coach.style.top = `${r.bottom + 10}px`;
-  clampHorizontally(coach);
+    if (!target || !coach.isConnected) return;
+    const r = target.getBoundingClientRect();
+    coach.style.left = `${r.left + r.width / 2}px`;
+    coach.style.top = `${r.bottom + 10}px`;
+    clampHorizontally(coach);
 }
 
 function placeCoachLeftOf(coach, target) {
-  if (!target || !coach.isConnected) return;
-  const r = target.getBoundingClientRect();
-  coach.style.left = `${r.left - 12}px`;
-  coach.style.top = `${r.top + r.height / 2}px`;
+    if (!target || !coach.isConnected) return;
+    const r = target.getBoundingClientRect();
+    coach.style.left = `${r.left - 12}px`;
+    coach.style.top = `${r.top + r.height / 2}px`;
 }
 
 function placeCoachRightOf(coach, target) {
-  if (!target || !coach.isConnected) return;
-  const r = target.getBoundingClientRect();
-  coach.style.left = `${r.right + 12}px`;
-  coach.style.top = `${r.top + r.height / 2}px`;
+    if (!target || !coach.isConnected) return;
+    const r = target.getBoundingClientRect();
+    coach.style.left = `${r.right + 12}px`;
+    coach.style.top = `${r.top + r.height / 2}px`;
 }
 
 function attachCoach(target, html, placement) {
-  if (!target) return null;
-  const coach = document.createElement("div");
-  const placementClass =
-    placement === "left" ? "sim-coach-left" :
-    placement === "right" ? "sim-coach-right" : "";
-  coach.className = placementClass ? `sim-coach ${placementClass}` : "sim-coach";
-  coach.innerHTML = html;
-  document.body.appendChild(coach);
-  const placer =
-    placement === "left" ? placeCoachLeftOf :
-    placement === "right" ? placeCoachRightOf :
-    placeCoachBelow;
-  placer(coach, target);
-  const reposition = () => placer(coach, target);
-  window.addEventListener("scroll", reposition, true);
-  window.addEventListener("resize", reposition);
-  activeCoaches.push({ coach, reposition });
-  return coach;
+    if (!target) return null;
+    const coach = document.createElement("div");
+    const placementClass =
+        placement === "left" ? "sim-coach-left" :
+        placement === "right" ? "sim-coach-right" : "";
+    coach.className = placementClass ? `sim-coach ${placementClass}` : "sim-coach";
+    coach.innerHTML = html;
+    document.body.appendChild(coach);
+    const placer =
+        placement === "left" ? placeCoachLeftOf :
+        placement === "right" ? placeCoachRightOf :
+        placeCoachBelow;
+    placer(coach, target);
+    const reposition = () => placer(coach, target);
+    window.addEventListener("scroll", reposition, true);
+    window.addEventListener("resize", reposition);
+    activeCoaches.push({
+        coach,
+        reposition
+    });
+    return coach;
 }
 
 function dismissCoaches() {
-  while (activeCoaches.length) {
-    const { coach, reposition } = activeCoaches.pop();
-    window.removeEventListener("scroll", reposition, true);
-    window.removeEventListener("resize", reposition);
-    coach.remove();
-  }
-  document.querySelectorAll(".sim-coach").forEach((c) => c.remove());
+    while (activeCoaches.length) {
+        const {
+            coach,
+            reposition
+        } = activeCoaches.pop();
+        window.removeEventListener("scroll", reposition, true);
+        window.removeEventListener("resize", reposition);
+        coach.remove();
+    }
+    document.querySelectorAll(".sim-coach").forEach((c) => c.remove());
 }
 
 function waitForLoader() {
-  const loader = document.getElementById("site-loader");
-  if (!loader || loader.classList.contains("is-hidden")) return Promise.resolve();
-  return new Promise((resolve) => {
-    const done = () => {
-      classObs.disconnect();
-      removalObs.disconnect();
-      resolve();
-    };
-    const classObs = new MutationObserver(() => {
-      if (loader.classList.contains("is-hidden")) done();
+    const loader = document.getElementById("site-loader");
+    if (!loader || loader.classList.contains("is-hidden")) return Promise.resolve();
+    return new Promise((resolve) => {
+        const done = () => {
+            classObs.disconnect();
+            removalObs.disconnect();
+            resolve();
+        };
+        const classObs = new MutationObserver(() => {
+            if (loader.classList.contains("is-hidden")) done();
+        });
+        classObs.observe(loader, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
+        const removalObs = new MutationObserver(() => {
+            if (!document.body.contains(loader)) done();
+        });
+        removalObs.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     });
-    classObs.observe(loader, { attributes: true, attributeFilter: ["class"] });
-    const removalObs = new MutationObserver(() => {
-      if (!document.body.contains(loader)) done();
-    });
-    removalObs.observe(document.body, { childList: true, subtree: true });
-  });
 }
 
 function showFirstScenarioCoach(scenario) {
-  if (coachShown.has(scenario.type)) return;
-  coachShown.add(scenario.type);
-  waitForLoader().then(() => {
-    if (answered || scenarios[index] !== scenario) return;
+    if (coachShown.has(scenario.type)) return;
+    coachShown.add(scenario.type);
+    waitForLoader().then(() => {
+        if (answered || scenarios[index] !== scenario) return;
 
-    if (scenario.type === "sms") {
-      const target = stage.querySelector(".sim-sms-report-btn");
-      attachCoach(target, `
+        if (scenario.type === "sms") {
+            const target = stage.querySelector(".sim-sms-report-btn");
+            attachCoach(target, `
         <span class="sim-coach-text">Tap <strong>Report Spam</strong> if this text looks like phishing.</span>
         <button class="sim-coach-dismiss" type="button" data-coach-dismiss>Got it</button>
       `, "right");
-    } else if (scenario.type === "email") {
-      const target = stage.querySelector(".sim-email-menu-toggle");
-      attachCoach(target, `
+        } else if (scenario.type === "email") {
+            const target = stage.querySelector(".sim-email-menu-toggle");
+            attachCoach(target, `
         <span class="sim-coach-text">Open the <strong>three dots (⋮)</strong> and pick <strong>Report phishing</strong> to flag this email.</span>
         <button class="sim-coach-dismiss" type="button" data-coach-dismiss>Got it</button>
       `, "left");
-    }
+        }
 
-    const safeBtn = actions.querySelector('[data-answer="safe"]');
-    attachCoach(safeBtn, `
+        const safeBtn = actions.querySelector('[data-answer="safe"]');
+        attachCoach(safeBtn, `
       <span class="sim-coach-text">If nothing looks off, click <strong>Continue Safe</strong> to move on.</span>
       <button class="sim-coach-dismiss" type="button" data-coach-dismiss>Got it</button>
     `, "left");
-  });
+    });
 }
 
 function showScenario() {
-  answered = false;
-  const scenario = scenarios[index];
-  stage.innerHTML = renderScenario(scenario);
-  stage.classList.remove("sim-stage-answered");
-  closeEmailMenus(stage);
-  dismissCoaches();
-  actions.innerHTML = renderActions(scenario);
-  actions.classList.toggle("is-single", scenario.type !== "url");
-  feedback.hidden = true;
-  actions.hidden = false;
-  updateProgress();
-  showFirstScenarioCoach(scenario);
+    answered = false;
+    const scenario = scenarios[index];
+    stage.innerHTML = renderScenario(scenario);
+    stage.classList.remove("sim-stage-answered");
+    closeEmailMenus(stage);
+    dismissCoaches();
+    actions.innerHTML = renderActions(scenario);
+    actions.classList.toggle("is-single", scenario.type !== "url");
+    feedback.hidden = true;
+    actions.hidden = false;
+    updateProgress();
+    showFirstScenarioCoach(scenario);
 }
 
 function answer(userPickedPhishing) {
-  if (answered) return;
-  answered = true;
-  feedback.hidden = true;
+    if (answered) return;
+    answered = true;
+    feedback.hidden = true;
 
-  const scenario = scenarios[index];
-  const correct = userPickedPhishing === scenario.isPhishing;
-  if (correct) score += 1;
-  if (window.Phishy && window.Phishy.analytics) {
-    window.Phishy.analytics.recordAnswer(
-      simRunId,
-      `${SIM_ID}:${index}`,
-      userPickedPhishing ? "phishing" : "safe",
-      correct
-    );
-  }
+    const scenario = scenarios[index];
+    const correct = userPickedPhishing === scenario.isPhishing;
+    if (correct) score += 1;
+    if (window.Phishy && window.Phishy.analytics) {
+        window.Phishy.analytics.recordAnswer(
+            simRunId,
+            `${SIM_ID}:${index}`,
+            userPickedPhishing ? "phishing" : "safe",
+            correct
+        );
+    }
 
-  closeEmailMenus(stage);
-  dismissCoaches();
-  stage.classList.add("sim-stage-answered");
-  stage.querySelectorAll("button").forEach(btn => {
-    btn.disabled = true;
-  });
-  actions.querySelectorAll("button").forEach(btn => {
-    btn.disabled = true;
-  });
-  actions.hidden = true;
+    closeEmailMenus(stage);
+    dismissCoaches();
+    stage.classList.add("sim-stage-answered");
+    stage.querySelectorAll("button").forEach(btn => {
+        btn.disabled = true;
+    });
+    actions.querySelectorAll("button").forEach(btn => {
+        btn.disabled = true;
+    });
+    actions.hidden = true;
 
-  feedbackTitle.textContent = correct
-    ? "Correct!"
-    : `Not quite this one was ${scenario.isPhishing ? "phishing" : "safe"}.`;
-  feedbackExplain.innerHTML = scenario.explain;
-  feedback.hidden = false;
-  showInlineFeedback(scenario, correct);
-  feedback.hidden = true;
+    feedbackTitle.textContent = correct ?
+        "Correct!" :
+        `Not quite this one was ${scenario.isPhishing ? "phishing" : "safe"}.`;
+    feedbackExplain.innerHTML = scenario.explain;
+    feedback.hidden = false;
+    showInlineFeedback(scenario, correct);
+    feedback.hidden = true;
 
-  scoreLabel.textContent = `Score: ${score}`;
+    scoreLabel.textContent = `Score: ${score}`;
 
-  if (index === scenarios.length - 1) {
-    nextBtn.textContent = "See results";
-  } else {
-    nextBtn.textContent = "Next scenario →";
-  }
+    if (index === scenarios.length - 1) {
+        nextBtn.textContent = "See results";
+    } else {
+        nextBtn.textContent = "Next scenario →";
+    }
 }
 
 function next() {
-  if (index < scenarios.length - 1) {
-    index += 1;
-    showScenario();
-    return;
-  }
+    if (index < scenarios.length - 1) {
+        index += 1;
+        showScenario();
+        return;
+    }
 
-  finish();
+    finish();
 }
 
 function finish() {
-  stage.innerHTML = "";
-  feedback.hidden = true;
-  actions.hidden = true;
-  progress.hidden = true;
+    stage.innerHTML = "";
+    feedback.hidden = true;
+    actions.hidden = true;
+    progress.hidden = true;
 
-  if (window.Phishy && window.Phishy.analytics) {
-    window.Phishy.analytics.finishSimulation(simRunId, score, scenarios.length);
-  }
+    if (window.Phishy && window.Phishy.analytics) {
+        window.Phishy.analytics.finishSimulation(simRunId, score, scenarios.length);
+    }
 
-  completeScore.textContent = `You scored ${score} out of ${scenarios.length}.`;
-  const percent = score / scenarios.length;
-  if (percent === 1) {
-    completeMsg.textContent =
-      "Perfect score. You've got a sharp eye for the red flags.";
-  } else if (percent >= 0.75) {
-    completeMsg.textContent =
-      "Solid run. Review the explanations on the ones you missed and try again.";
-  } else if (percent >= 0.5) {
-    completeMsg.textContent =
-      "Good start. Check the Safety Tips page for the patterns to watch for.";
-  } else {
-    completeMsg.textContent =
-      "Plenty of room to grow. Read through the Safety Tips page and run it again.";
-  }
+    completeScore.textContent = `You scored ${score} out of ${scenarios.length}.`;
+    const percent = score / scenarios.length;
+    if (percent === 1) {
+        completeMsg.textContent =
+            "Perfect score. You've got a sharp eye for the red flags.";
+    } else if (percent >= 0.75) {
+        completeMsg.textContent =
+            "Solid run. Review the explanations on the ones you missed and try again.";
+    } else if (percent >= 0.5) {
+        completeMsg.textContent =
+            "Good start. Check the Safety Tips page for the patterns to watch for.";
+    } else {
+        completeMsg.textContent =
+            "Plenty of room to grow. Read through the Safety Tips page and run it again.";
+    }
 
-  complete.hidden = false;
+    complete.hidden = false;
 }
 
 function restart() {
-  index = 0;
-  score = 0;
-  coachShown.clear();
-  complete.hidden = true;
-  progress.hidden = false;
-  startSimRun();
-  showScenario();
+    index = 0;
+    score = 0;
+    coachShown.clear();
+    complete.hidden = true;
+    progress.hidden = false;
+    startSimRun();
+    showScenario();
 }
 
 actions.addEventListener("click", event => {
-  if (event.target.closest("[data-coach-dismiss]")) {
-    dismissCoaches();
-    return;
-  }
-  const actionBtn = event.target.closest("[data-answer]");
-  if (!actionBtn || answered) return;
-  answer(actionBtn.dataset.answer === "phishing");
+    if (event.target.closest("[data-coach-dismiss]")) {
+        dismissCoaches();
+        return;
+    }
+    const actionBtn = event.target.closest("[data-answer]");
+    if (!actionBtn || answered) return;
+    answer(actionBtn.dataset.answer === "phishing");
 });
 
 stage.addEventListener("click", event => {
-  if (event.target.closest("[data-coach-dismiss]")) {
-    dismissCoaches();
-    return;
-  }
-
-  if (event.target.closest("[data-inline-next]")) {
-    next();
-    return;
-  }
-
-  if (answered) return;
-
-  const menuToggle = event.target.closest(".sim-email-menu-toggle");
-  if (menuToggle) {
-    const menu = menuToggle.closest(".sim-email-menu");
-    const shouldOpen = !menu.classList.contains("is-open");
-    closeEmailMenus(stage);
-    if (shouldOpen) {
-      menu.classList.add("is-open");
-      menuToggle.setAttribute("aria-expanded", "true");
+    if (event.target.closest("[data-coach-dismiss]")) {
+        dismissCoaches();
+        return;
     }
-    return;
-  }
 
-  if (event.target.closest(".sim-email-report-btn") || event.target.closest(".sim-sms-report-btn")) {
-    answer(true);
-    return;
-  }
+    if (event.target.closest("[data-inline-next]")) {
+        next();
+        return;
+    }
 
-  closeEmailMenus(stage);
+    if (answered) return;
+
+    const menuToggle = event.target.closest(".sim-email-menu-toggle");
+    if (menuToggle) {
+        const menu = menuToggle.closest(".sim-email-menu");
+        const shouldOpen = !menu.classList.contains("is-open");
+        closeEmailMenus(stage);
+        if (shouldOpen) {
+            menu.classList.add("is-open");
+            menuToggle.setAttribute("aria-expanded", "true");
+        }
+        return;
+    }
+
+    if (event.target.closest(".sim-email-report-btn") || event.target.closest(".sim-sms-report-btn")) {
+        answer(true);
+        return;
+    }
+
+    closeEmailMenus(stage);
 });
 
 nextBtn.addEventListener("click", next);
 restartBtn.addEventListener("click", restart);
 
 document.addEventListener("click", (event) => {
-  if (event.target.closest("[data-coach-dismiss]")) {
-    dismissCoaches();
-  }
+    if (event.target.closest("[data-coach-dismiss]")) {
+        dismissCoaches();
+    }
 });
 
 showScenario();
@@ -566,20 +574,20 @@ const courseBack = document.getElementById("course-back");
 const demoSection = document.getElementById("demo-section");
 
 function initials(name) {
-  return (name || "")
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map(s => s[0].toUpperCase())
-    .join("");
+    return (name || "")
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(s => s[0].toUpperCase())
+        .join("");
 }
 
 function renderStatus() {
-  if (!statusEl || !window.Phishy) return;
-  const user = window.Phishy.auth.getCurrentUser();
+    if (!statusEl || !window.Phishy) return;
+    const user = window.Phishy.auth.getCurrentUser();
 
-  if (!user) {
-    statusEl.innerHTML = `
+    if (!user) {
+        statusEl.innerHTML = `
       <p class="page-hero-card-eyebrow">Guest mode</p>
       <h3>Track your progress</h3>
       <p class="page-hero-card-body">
@@ -590,19 +598,19 @@ function renderStatus() {
         New employer? <a href="../login/">Sign in as the business owner.</a>
       </p>
     `;
-    return;
-  }
+        return;
+    }
 
-  const assignments = window.Phishy.store.getAssignments(user.id);
-  const completed = assignments.filter(a =>
-    window.Phishy.store.getProgress(user.id, a.courseId)
-  ).length;
-  const total = assignments.length;
-  const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
-  const dashHref = user.role === "admin" ? "../company/" : "../dashboard/";
-  const dashLabel = user.role === "admin" ? "Open company panel" : "Open dashboard";
+    const assignments = window.Phishy.store.getAssignments(user.id);
+    const completed = assignments.filter(a =>
+        window.Phishy.store.getProgress(user.id, a.courseId)
+    ).length;
+    const total = assignments.length;
+    const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const dashHref = user.role === "admin" ? "../company/" : "../dashboard/";
+    const dashLabel = user.role === "admin" ? "Open company panel" : "Open dashboard";
 
-  statusEl.innerHTML = `
+    statusEl.innerHTML = `
     <header class="page-hero-card-head">
       <div class="article-avatar">${escapeHtml(initials(user.name))}</div>
       <div>
@@ -622,45 +630,71 @@ function renderStatus() {
     </div>
   `;
 
-  const signoutBtn = document.getElementById("status-signout");
-  if (signoutBtn) {
-    signoutBtn.addEventListener("click", async () => {
-      signoutBtn.disabled = true;
-      await window.Phishy.auth.signOut();
-      window.location.reload();
-    });
-  }
+    const signoutBtn = document.getElementById("status-signout");
+    if (signoutBtn) {
+        signoutBtn.addEventListener("click", async () => {
+            signoutBtn.disabled = true;
+            await window.Phishy.auth.signOut();
+            window.location.reload();
+        });
+    }
 }
 
 function courseCardState(course, user) {
-  if (!user) {
-    return course.isFree
-      ? { label: "Free", available: true, action: "Start course" }
-      : { label: "Premium", available: false, action: "Sign in to unlock" };
-  }
-  const assigned = window.Phishy.store.isAssigned(user.id, course.id);
-  const done = !!window.Phishy.store.getProgress(user.id, course.id);
-  if (done) return { label: "Completed", available: true, action: "Review", state: "done" };
-  if (course.isFree) return { label: "Free", available: true, action: "Start course" };
-  if (assigned) return { label: "Assigned", available: true, action: "Start course", state: "assigned" };
-  return { label: "Premium", available: false, action: "Ask your admin to assign" };
+    if (!user) {
+        return course.isFree ?
+            {
+                label: "Free",
+                available: true,
+                action: "Start course"
+            } :
+            {
+                label: "Premium",
+                available: false,
+                action: "Sign in to unlock"
+            };
+    }
+    const assigned = window.Phishy.store.isAssigned(user.id, course.id);
+    const done = !!window.Phishy.store.getProgress(user.id, course.id);
+    if (done) return {
+        label: "Completed",
+        available: true,
+        action: "Review",
+        state: "done"
+    };
+    if (course.isFree) return {
+        label: "Free",
+        available: true,
+        action: "Start course"
+    };
+    if (assigned) return {
+        label: "Assigned",
+        available: true,
+        action: "Start course",
+        state: "assigned"
+    };
+    return {
+        label: "Premium",
+        available: false,
+        action: "Ask your admin to assign"
+    };
 }
 
 function renderCatalog() {
-  if (!grid || !window.Phishy) return;
-  const user = window.Phishy.auth.getCurrentUser();
-  const courses = window.Phishy.store.getCourses();
+    if (!grid || !window.Phishy) return;
+    const user = window.Phishy.auth.getCurrentUser();
+    const courses = window.Phishy.store.getCourses();
 
-  grid.innerHTML = courses.map(course => {
-    const state = courseCardState(course, user);
-    const badgeClass = state.state === "done" ? "course-badge-done"
-      : state.state === "assigned" ? "course-badge-assigned"
-      : course.isFree ? "course-badge-free" : "course-badge-premium";
-    const tier = course.isFree ? "free" : "premium";
-    const stateClass = state.state === "done" ? " is-done"
-      : state.state === "assigned" ? " is-assigned"
-      : !state.available ? " is-locked" : "";
-    return `
+    grid.innerHTML = courses.map(course => {
+        const state = courseCardState(course, user);
+        const badgeClass = state.state === "done" ? "course-badge-done" :
+            state.state === "assigned" ? "course-badge-assigned" :
+            course.isFree ? "course-badge-free" : "course-badge-premium";
+        const tier = course.isFree ? "free" : "premium";
+        const stateClass = state.state === "done" ? " is-done" :
+            state.state === "assigned" ? " is-assigned" :
+            !state.available ? " is-locked" : "";
+        return `
       <article class="course-card course-card-tier-${tier}${stateClass}" data-course-id="${escapeHtml(course.id)}">
         <div class="course-card-stripe"></div>
         <div class="course-card-body">
@@ -683,37 +717,37 @@ function renderCatalog() {
         </footer>
       </article>
     `;
-  }).join("");
+    }).join("");
 
-  grid.querySelectorAll('[data-action="open"]').forEach(btn => {
-    btn.addEventListener("click", () => openCourse(btn.dataset.courseId));
-  });
+    grid.querySelectorAll('[data-action="open"]').forEach(btn => {
+        btn.addEventListener("click", () => openCourse(btn.dataset.courseId));
+    });
 }
 
 function renderBlock(block) {
-  if (block.type === "h") return `<h3>${escapeHtml(block.text)}</h3>`;
-  if (block.type === "p") return `<p>${escapeHtml(block.text)}</p>`;
-  if (block.type === "ul") return `<ul>${block.items.map(i => `<li>${escapeHtml(i)}</li>`).join("")}</ul>`;
-  if (block.type === "ol") return `<ol>${block.items.map(i => `<li>${escapeHtml(i)}</li>`).join("")}</ol>`;
-  return "";
+    if (block.type === "h") return `<h3>${escapeHtml(block.text)}</h3>`;
+    if (block.type === "p") return `<p>${escapeHtml(block.text)}</p>`;
+    if (block.type === "ul") return `<ul>${block.items.map(i => `<li>${escapeHtml(i)}</li>`).join("")}</ul>`;
+    if (block.type === "ol") return `<ol>${block.items.map(i => `<li>${escapeHtml(i)}</li>`).join("")}</ol>`;
+    return "";
 }
 
 function openCourse(courseId) {
-  if (!window.Phishy || !coursePaper || !courseView) return;
-  const course = window.Phishy.store.getCourse(courseId);
-  if (!course) return;
-  const user = window.Phishy.auth.getCurrentUser();
-  const done = user ? !!window.Phishy.store.getProgress(user.id, courseId) : false;
-  const isQuiz =
-    course.kind === "quiz" &&
-    Array.isArray(course.body) &&
-    course.body.length > 0 &&
-    course.body[0] &&
-    typeof course.body[0].isPhishing === "boolean";
+    if (!window.Phishy || !coursePaper || !courseView) return;
+    const course = window.Phishy.store.getCourse(courseId);
+    if (!course) return;
+    const user = window.Phishy.auth.getCurrentUser();
+    const done = user ? !!window.Phishy.store.getProgress(user.id, courseId) : false;
+    const isQuiz =
+        course.kind === "quiz" &&
+        Array.isArray(course.body) &&
+        course.body.length > 0 &&
+        course.body[0] &&
+        typeof course.body[0].isPhishing === "boolean";
 
-  if (isQuiz) {
-    if (!user) {
-      coursePaper.innerHTML = `
+    if (isQuiz) {
+        if (!user) {
+            coursePaper.innerHTML = `
         <header class="course-paper-head">
           <p class="article-category">${course.isFree ? "Free course" : "Premium course"} &middot; ${course.body.length} questions</p>
           <h2>${escapeHtml(course.title)}</h2>
@@ -727,8 +761,8 @@ function openCourse(courseId) {
           <a class="catalog-btn" href="../login/">Sign in to start</a>
         </footer>
       `;
-    } else {
-      coursePaper.innerHTML = `
+        } else {
+            coursePaper.innerHTML = `
         <header class="course-paper-head">
           <p class="article-category">${course.isFree ? "Free course" : "Premium course"} &middot; ${course.body.length} questions</p>
           <h2>${escapeHtml(course.title)}</h2>
@@ -737,29 +771,35 @@ function openCourse(courseId) {
         </header>
         <div class="course-quiz-host"></div>
       `;
-      const host = coursePaper.querySelector(".course-quiz-host");
-      if (window.PhishyQuiz && window.PhishyQuiz.run) {
-        window.PhishyQuiz.run(host, course.body, {
-          onComplete: async ({ score, total }) => {
-            try {
-              await window.Phishy.store.markComplete(user.id, courseId, score);
-            } catch (err) {
-              console.error("markComplete failed", err);
+            const host = coursePaper.querySelector(".course-quiz-host");
+            if (window.PhishyQuiz && window.PhishyQuiz.run) {
+                window.PhishyQuiz.run(host, course.body, {
+                    onComplete: async ({
+                        score,
+                        total
+                    }) => {
+                        try {
+                            await window.Phishy.store.markComplete(user.id, courseId, score);
+                        } catch (err) {
+                            console.error("markComplete failed", err);
+                        }
+                        renderStatus();
+                        renderCatalog();
+                    },
+                });
             }
-            renderStatus();
-            renderCatalog();
-          },
+        }
+        if (demoSection) demoSection.hidden = true;
+        courseView.hidden = false;
+        courseView.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
         });
-      }
+        return;
     }
-    if (demoSection) demoSection.hidden = true;
-    courseView.hidden = false;
-    courseView.scrollIntoView({ behavior: "smooth", block: "start" });
-    return;
-  }
 
-  const bodyHtml = (course.body || []).map(renderBlock).join("");
-  coursePaper.innerHTML = `
+    const bodyHtml = (course.body || []).map(renderBlock).join("");
+    coursePaper.innerHTML = `
     <header class="course-paper-head">
       <p class="article-category">${course.isFree ? "Free course" : "Premium course"} &middot; ${course.durationMin} min</p>
       <h2>${escapeHtml(course.title)}</h2>
@@ -777,54 +817,57 @@ function openCourse(courseId) {
     </footer>
   `;
 
-  if (user) {
-    const completeBtn = document.getElementById("course-mark-complete");
-    const incompleteBtn = document.getElementById("course-mark-incomplete");
-    if (completeBtn) {
-      completeBtn.addEventListener("click", async () => {
-        completeBtn.disabled = true;
-        try {
-          await window.Phishy.store.markComplete(user.id, courseId);
-        } finally {
-          renderStatus();
-          renderCatalog();
-          openCourse(courseId);
+    if (user) {
+        const completeBtn = document.getElementById("course-mark-complete");
+        const incompleteBtn = document.getElementById("course-mark-incomplete");
+        if (completeBtn) {
+            completeBtn.addEventListener("click", async () => {
+                completeBtn.disabled = true;
+                try {
+                    await window.Phishy.store.markComplete(user.id, courseId);
+                } finally {
+                    renderStatus();
+                    renderCatalog();
+                    openCourse(courseId);
+                }
+            });
         }
-      });
-    }
-    if (incompleteBtn) {
-      incompleteBtn.addEventListener("click", async () => {
-        incompleteBtn.disabled = true;
-        try {
-          await window.Phishy.store.clearProgress(user.id, courseId);
-        } finally {
-          renderStatus();
-          renderCatalog();
-          openCourse(courseId);
+        if (incompleteBtn) {
+            incompleteBtn.addEventListener("click", async () => {
+                incompleteBtn.disabled = true;
+                try {
+                    await window.Phishy.store.clearProgress(user.id, courseId);
+                } finally {
+                    renderStatus();
+                    renderCatalog();
+                    openCourse(courseId);
+                }
+            });
         }
-      });
     }
-  }
 
-  if (demoSection) demoSection.hidden = true;
-  courseView.hidden = false;
-  courseView.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (demoSection) demoSection.hidden = true;
+    courseView.hidden = false;
+    courseView.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
 
 if (courseBack && courseView) {
-  courseBack.addEventListener("click", () => {
-    courseView.hidden = true;
-    if (demoSection) demoSection.hidden = false;
-  });
+    courseBack.addEventListener("click", () => {
+        courseView.hidden = true;
+        if (demoSection) demoSection.hidden = false;
+    });
 }
 
 function initCatalog() {
-  renderStatus();
-  renderCatalog();
+    renderStatus();
+    renderCatalog();
 }
 
 if (window.Phishy) {
-  window.Phishy.ready().then(initCatalog);
+    window.Phishy.ready().then(initCatalog);
 } else {
-  initCatalog();
+    initCatalog();
 }

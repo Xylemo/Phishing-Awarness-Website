@@ -1,16 +1,16 @@
 const root = document.getElementById("dashboard-root");
 
 function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
 
 function renderSignedOut() {
-  root.innerHTML = `
+    root.innerHTML = `
     <header class="dashboard-header">
       <p class="eyebrow">Dashboard</p>
       <h1>You're not signed in</h1>
@@ -23,19 +23,19 @@ function renderSignedOut() {
 }
 
 function fmtNum(n) {
-  return new Intl.NumberFormat("en-US").format(n || 0);
+    return new Intl.NumberFormat("en-US").format(n || 0);
 }
 
 function fmtTime(iso) {
-  if (!iso) return "—";
-  const d = new Date(iso.replace(" ", "T") + "Z");
-  if (isNaN(d.getTime())) return iso;
-  return d.toLocaleString();
+    if (!iso) return "-";
+    const d = new Date(iso.replace(" ", "T") + "Z");
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleString();
 }
 
 function firstName(user) {
-  const name = (user.name || user.email || "there").trim();
-  return name.split(/\s+/)[0];
+    const name = (user.name || user.email || "there").trim();
+    return name.split(/\s+/)[0];
 }
 
 let viewState = "catalog";
@@ -44,38 +44,41 @@ let cachedCompletions = {};
 let cachedUser = null;
 
 function courseStatus(course) {
-  const c = cachedCompletions[course.slug];
-  if (!c) return { label: "Not started", state: "todo" };
-  const total = c.bestTotal || course.questions.length;
-  const score = c.bestScore == null ? 0 : c.bestScore;
-  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
-  return {
-    label: `Completed · best ${score}/${total} (${pct}%)`,
-    state: "done",
-    pct,
-    attempts: c.attempts,
-    when: c.lastCompletedAt,
-  };
+    const c = cachedCompletions[course.slug];
+    if (!c) return {
+        label: "Not started",
+        state: "todo"
+    };
+    const total = c.bestTotal || course.questions.length;
+    const score = c.bestScore == null ? 0 : c.bestScore;
+    const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+    return {
+        label: `Completed · best ${score}/${total} (${pct}%)`,
+        state: "done",
+        pct,
+        attempts: c.attempts,
+        when: c.lastCompletedAt,
+    };
 }
 
 function renderCatalog() {
-  const courses = (window.PhishyCourses && window.PhishyCourses.catalog) || [];
-  const completedSlugs = courses.filter((c) => cachedCompletions[c.slug]);
-  const total = courses.length;
-  const completed = completedSlugs.length;
-  const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
-  const adminLink =
-    cachedUser && cachedUser.role === "admin"
-      ? `<a class="catalog-btn catalog-btn-outline" href="../company/">Open company panel</a>`
-      : "";
+    const courses = (window.PhishyCourses && window.PhishyCourses.catalog) || [];
+    const completedSlugs = courses.filter((c) => cachedCompletions[c.slug]);
+    const total = courses.length;
+    const completed = completedSlugs.length;
+    const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const adminLink =
+        cachedUser && cachedUser.role === "admin" ?
+        `<a class="catalog-btn catalog-btn-outline" href="../company/">Open company panel</a>` :
+        "";
 
-  const cards = courses
-    .map((c) => {
-      const status = courseStatus(c);
-      const badgeClass =
-        status.state === "done" ? "course-badge-done" : "course-badge-assigned";
-      const action = status.state === "done" ? "Retake" : "Start course";
-      return `
+    const cards = courses
+        .map((c) => {
+            const status = courseStatus(c);
+            const badgeClass =
+                status.state === "done" ? "course-badge-done" : "course-badge-assigned";
+            const action = status.state === "done" ? "Retake" : "Start course";
+            return `
         <article class="dashboard-course ${status.state === "done" ? "is-done" : ""}" data-slug="${escapeHtml(c.slug)}">
           <div class="dashboard-course-head">
             <span class="course-badge ${badgeClass}">${escapeHtml(status.label)}</span>
@@ -88,10 +91,10 @@ function renderCatalog() {
           </div>
         </article>
       `;
-    })
-    .join("");
+        })
+        .join("");
 
-  return `
+    return `
     <section class="dashboard-summary">
       <div class="dashboard-stat">
         <span class="dashboard-stat-value">${completed}/${total}</span>
@@ -120,12 +123,12 @@ function renderCatalog() {
 }
 
 function renderCourseView(slug) {
-  const courses = (window.PhishyCourses && window.PhishyCourses.catalog) || [];
-  const course = courses.find((c) => c.slug === slug);
-  if (!course) return `<p class="admin-form-error">Course not found.</p>`;
-  const status = courseStatus(course);
+    const courses = (window.PhishyCourses && window.PhishyCourses.catalog) || [];
+    const course = courses.find((c) => c.slug === slug);
+    if (!course) return `<p class="admin-form-error">Course not found.</p>`;
+    const status = courseStatus(course);
 
-  return `
+    return `
     <section class="catalog-section catalog-course-view">
       <button class="catalog-back" type="button" id="dashboard-course-back">&larr; Back to courses</button>
       <article class="course-paper">
@@ -146,25 +149,25 @@ function renderCourseView(slug) {
 }
 
 async function refreshCompletions() {
-  try {
-    const data = await window.Phishy.me.courses();
-    cachedCompletions = data.completions || {};
-  } catch (_) {
-    cachedCompletions = {};
-  }
+    try {
+        const data = await window.Phishy.me.courses();
+        cachedCompletions = data.completions || {};
+    } catch (_) {
+        cachedCompletions = {};
+    }
 }
 
 async function render() {
-  if (!window.Phishy) return;
-  cachedUser = window.Phishy.auth.getCurrentUser();
-  if (!cachedUser) {
-    renderSignedOut();
-    return;
-  }
+    if (!window.Phishy) return;
+    cachedUser = window.Phishy.auth.getCurrentUser();
+    if (!cachedUser) {
+        renderSignedOut();
+        return;
+    }
 
-  await refreshCompletions();
+    await refreshCompletions();
 
-  root.innerHTML = `
+    root.innerHTML = `
     <header class="dashboard-header">
       <p class="eyebrow">${cachedUser.role === "admin" ? "Admin" : "Employee"} dashboard</p>
       <h1>Welcome back, ${escapeHtml(firstName(cachedUser))}</h1>
@@ -175,72 +178,78 @@ async function render() {
     <div id="dashboard-body"></div>
   `;
 
-  paintBody();
+    paintBody();
 }
 
 function paintBody() {
-  const body = document.getElementById("dashboard-body");
-  if (!body) return;
-  if (viewState === "course" && activeSlug) {
-    body.innerHTML = renderCourseView(activeSlug);
-    bindCourseView();
-  } else {
-    body.innerHTML = renderCatalog();
-    bindCatalog();
-  }
+    const body = document.getElementById("dashboard-body");
+    if (!body) return;
+    if (viewState === "course" && activeSlug) {
+        body.innerHTML = renderCourseView(activeSlug);
+        bindCourseView();
+    } else {
+        body.innerHTML = renderCatalog();
+        bindCatalog();
+    }
 }
 
 function bindCatalog() {
-  document.querySelectorAll('[data-action="open"]').forEach((btn) => {
-    btn.addEventListener("click", () => {
-      activeSlug = btn.dataset.slug;
-      viewState = "course";
-      paintBody();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelectorAll('[data-action="open"]').forEach((btn) => {
+        btn.addEventListener("click", () => {
+            activeSlug = btn.dataset.slug;
+            viewState = "course";
+            paintBody();
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
     });
-  });
-  const signOut = document.getElementById("dashboard-signout");
-  if (signOut) {
-    signOut.addEventListener("click", async () => {
-      signOut.disabled = true;
-      await window.Phishy.auth.signOut();
-      window.location.href = "../";
-    });
-  }
+    const signOut = document.getElementById("dashboard-signout");
+    if (signOut) {
+        signOut.addEventListener("click", async () => {
+            signOut.disabled = true;
+            await window.Phishy.auth.signOut();
+            window.location.href = "../";
+        });
+    }
 }
 
 function bindCourseView() {
-  const back = document.getElementById("dashboard-course-back");
-  if (back) {
-    back.addEventListener("click", () => {
-      viewState = "catalog";
-      activeSlug = null;
-      paintBody();
+    const back = document.getElementById("dashboard-course-back");
+    if (back) {
+        back.addEventListener("click", () => {
+            viewState = "catalog";
+            activeSlug = null;
+            paintBody();
+        });
+    }
+
+    const host = document.getElementById("course-quiz-host");
+    const courses = (window.PhishyCourses && window.PhishyCourses.catalog) || [];
+    const course = courses.find((c) => c.slug === activeSlug);
+    if (!host || !course || !window.PhishyQuiz || !window.PhishyQuiz.run) return;
+
+    window.PhishyQuiz.run(host, course.questions, {
+        simulationId: course.slug,
+        onComplete: async ({
+            score,
+            total
+        }) => {
+            try {
+                await window.Phishy.me.completeCourse(course.slug, score, total);
+                await refreshCompletions();
+            } catch (err) {
+                console.error("completeCourse failed", err);
+            }
+        },
     });
-  }
-
-  const host = document.getElementById("course-quiz-host");
-  const courses = (window.PhishyCourses && window.PhishyCourses.catalog) || [];
-  const course = courses.find((c) => c.slug === activeSlug);
-  if (!host || !course || !window.PhishyQuiz || !window.PhishyQuiz.run) return;
-
-  window.PhishyQuiz.run(host, course.questions, {
-    simulationId: course.slug,
-    onComplete: async ({ score, total }) => {
-      try {
-        await window.Phishy.me.completeCourse(course.slug, score, total);
-        await refreshCompletions();
-      } catch (err) {
-        console.error("completeCourse failed", err);
-      }
-    },
-  });
 }
 
 if (root) {
-  if (window.Phishy) {
-    window.Phishy.ready().then(render);
-  } else {
-    render();
-  }
+    if (window.Phishy) {
+        window.Phishy.ready().then(render);
+    } else {
+        render();
+    }
 }

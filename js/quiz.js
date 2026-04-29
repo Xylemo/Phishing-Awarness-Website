@@ -92,7 +92,9 @@
         if (window.Phishy && window.Phishy.analytics) {
             window.Phishy.analytics
                 .startSimulation(simulationId)
-                .then((r) => { runId = r && r.runId; })
+                .then((r) => {
+                    runId = r && r.runId;
+                })
                 .catch(() => {});
         }
 
@@ -136,16 +138,16 @@
         }
 
         function showInlineFeedback(q, correct) {
-            const host = q.type === "sms"
-                ? stage.querySelector(".sim-imessage-thread")
-                : q.type === "email"
-                    ? stage.querySelector(".sim-email-card")
-                    : stage.querySelector(".sim-url");
-            const target = q.type === "sms"
-                ? stage.querySelector(".sim-sms-bubble")
-                : q.type === "email"
-                    ? stage.querySelector(".sim-email-card")
-                    : stage.querySelector(".sim-url-bar");
+            const host = q.type === "sms" ?
+                stage.querySelector(".sim-imessage-thread") :
+                q.type === "email" ?
+                stage.querySelector(".sim-email-card") :
+                stage.querySelector(".sim-url");
+            const target = q.type === "sms" ?
+                stage.querySelector(".sim-sms-bubble") :
+                q.type === "email" ?
+                stage.querySelector(".sim-email-card") :
+                stage.querySelector(".sim-url-bar");
 
             if (host) {
                 host.querySelector(".sim-inline-feedback")?.remove();
@@ -224,13 +226,19 @@
             const reposition = () => placer(coach, target);
             window.addEventListener("scroll", reposition, true);
             window.addEventListener("resize", reposition);
-            activeCoaches.push({ coach, reposition });
+            activeCoaches.push({
+                coach,
+                reposition
+            });
             return coach;
         }
 
         function dismissCoaches() {
             while (activeCoaches.length) {
-                const { coach, reposition } = activeCoaches.pop();
+                const {
+                    coach,
+                    reposition
+                } = activeCoaches.pop();
                 window.removeEventListener("scroll", reposition, true);
                 window.removeEventListener("resize", reposition);
                 coach.remove();
@@ -250,11 +258,17 @@
                 const classObs = new MutationObserver(() => {
                     if (loader.classList.contains("is-hidden")) done();
                 });
-                classObs.observe(loader, { attributes: true, attributeFilter: ["class"] });
+                classObs.observe(loader, {
+                    attributes: true,
+                    attributeFilter: ["class"]
+                });
                 const removalObs = new MutationObserver(() => {
                     if (!document.body.contains(loader)) done();
                 });
-                removalObs.observe(document.body, { childList: true, subtree: true });
+                removalObs.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
             });
         }
 
@@ -324,7 +338,9 @@
             }
             closeEmailMenus(stage);
             dismissCoaches();
-            actions.querySelectorAll("button").forEach((b) => { b.disabled = true; });
+            actions.querySelectorAll("button").forEach((b) => {
+                b.disabled = true;
+            });
             actions.hidden = true;
             scoreEl.textContent = `Score: ${score}`;
             showInlineFeedback(q, correct);
@@ -361,7 +377,9 @@
                 if (window.Phishy && window.Phishy.analytics) {
                     window.Phishy.analytics
                         .startSimulation(simulationId)
-                        .then((r) => { runId = r && r.runId; })
+                        .then((r) => {
+                            runId = r && r.runId;
+                        })
                         .catch(() => {});
                 }
                 progressEl.hidden = false;
