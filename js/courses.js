@@ -50,7 +50,7 @@
         "Gate C12. Boarding at 14:30. View your boarding pass in the app.",
       isPhishing: false,
       explain:
-        "Registered short code, specific flight detail, no link to click — that's " +
+        "Registered short code, specific flight detail, no link to click that's " +
         "the legit airline pattern.",
     },
   };
@@ -113,7 +113,7 @@
       isPhishing: false,
       explain:
         "Sender is spotify.com, link is spotify.com, named greeting, no urgency, " +
-        "no credential request — a normal transactional email.",
+        "no credential request a normal transactional email.",
     },
     em5: {
       type: "email",
@@ -131,20 +131,42 @@
     },
   };
 
+  const smsList = Object.values(SMS);
+  const emailList = Object.values(EMAIL);
+
   const catalog = [
     {
-      slug: "course_1",
-      title: "Course 1",
-      description: "description 1",
-      durationMin: 0,
-      questions: [],
+      slug: "smishing",
+      title: "Smishing: Spotting Phishing Texts",
+      description:
+        "Five SMS scenarios. Decide whether each text is phishing (smishing) or a legitimate message.",
+      durationMin: 5,
+      questions: smsList,
     },
     {
-      slug: "course_2",
-      title: "Course 2",
-      description: "description 1",
-      durationMin: 0,
-      questions: [],
+      slug: "email-phishing",
+      title: "Email Phishing: Reading Suspicious Mail",
+      description:
+        "Five Gmail scenarios. Inspect the sender, subject, and body to decide whether each email is phishing or safe.",
+      durationMin: 8,
+      questions: emailList,
+    },
+    {
+      slug: "mixed-phishing",
+      title: "Mixed Phishing Drill",
+      description:
+        "A mixed bag of texts and emails. Switch contexts quickly and apply the warning signs you've learned.",
+      durationMin: 10,
+      questions: [
+        SMS.sms1,
+        EMAIL.em2,
+        SMS.sms3,
+        EMAIL.em3,
+        SMS.sms4,
+        EMAIL.em4,
+        SMS.sms5,
+        EMAIL.em5,
+      ],
     },
   ];
 

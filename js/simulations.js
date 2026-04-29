@@ -354,7 +354,7 @@ function answer(userPickedPhishing) {
 
   feedbackTitle.textContent = correct
     ? "Correct!"
-    : `Not quite — this one was ${scenario.isPhishing ? "phishing" : "safe"}.`;
+    : `Not quite this one was ${scenario.isPhishing ? "phishing" : "safe"}.`;
   feedbackExplain.innerHTML = scenario.explain;
   feedback.hidden = false;
   showInlineFeedback(scenario, correct);

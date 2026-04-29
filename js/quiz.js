@@ -8,6 +8,18 @@
             .replace(/'/g, "&#39;");
     }
 
+    function avatarInitial(label) {
+        return escapeHtml(String(label || "?").trim().charAt(0).toUpperCase() || "?");
+    }
+
+    function closeEmailMenus(root) {
+        (root || document).querySelectorAll(".sim-email-menu.is-open").forEach(menu => {
+            menu.classList.remove("is-open");
+            const toggle = menu.querySelector(".sim-email-menu-toggle");
+            if (toggle) toggle.setAttribute("aria-expanded", "false");
+        });
+    }
+
     function renderScenario(s) {
         if (s.type === "url") {
             return `
@@ -20,31 +32,50 @@
         if (s.type === "sms") {
             return `
         <div class="sim-message sim-sms">
-          <div class="sim-sms-header">
-            <span class="sim-sms-label">Text message</span>
-            <span class="sim-sms-sender">${escapeHtml(s.sender)}</span>
+          <div class="sim-phone-shell">
+            <div class="sim-imessage-header">
+              <div class="sim-imessage-contact">
+                <div>
+                  <strong>${escapeHtml(s.sender)}</strong>
+                </div>
+              </div>
+            </div>
+            <div class="sim-imessage-thread">
+              <div class="sim-imessage-phone">
+                <div class="sim-sms-bubble">${escapeHtml(s.body)}</div>
+                <div class="sim-imessage-alert">
+                  <p>If you did not expect this message from an unknown sender, it may be spam.</p>
+                  <button class="sim-sms-report-btn" type="button">Report Spam</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="sim-sms-bubble">${escapeHtml(s.body)}</div>
         </div>
       `;
         }
         const bodyHtml = escapeHtml(s.body).replace(/\n/g, "<br />");
         return `
       <div class="sim-message sim-email">
-        <div class="sim-email-header">
-          <div class="sim-email-row">
-            <span class="sim-email-label">From</span>
-            <span class="sim-email-value">
-              <strong>${escapeHtml(s.fromName)}</strong>
-              &lt;${escapeHtml(s.fromAddress)}&gt;
-            </span>
+        <article class="sim-email-card sim-gmail-page">
+          <h3 class="sim-email-title">${escapeHtml(s.subject)}</h3>
+          <div class="sim-email-menu">
+            <button class="sim-email-menu-toggle" type="button" aria-expanded="false" aria-label="More email actions">&#8942;</button>
+            <div class="sim-email-menu-panel">
+              <button class="sim-email-menu-action sim-email-report-btn" type="button">Report phishing</button>
+            </div>
           </div>
-          <div class="sim-email-row">
-            <span class="sim-email-label">Subject</span>
-            <span class="sim-email-value">${escapeHtml(s.subject)}</span>
+          <div class="sim-email-header">
+            <span class="sim-email-avatar">${avatarInitial(s.fromName)}</span>
+            <div class="sim-email-meta">
+              <div class="sim-email-sender-line">
+                <strong>${escapeHtml(s.fromName)}</strong>
+                <span>&lt;${escapeHtml(s.fromAddress)}&gt;</span>
+              </div>
+              <div class="sim-email-recipient-line">to me</div>
+            </div>
           </div>
-        </div>
-        <div class="sim-email-body">${bodyHtml}</div>
+          <div class="sim-email-body">${bodyHtml}</div>
+        </article>
       </div>
     `;
     }
@@ -112,6 +143,7 @@
             answered = false;
             const q = questions[index];
             stage.innerHTML = renderScenario(q);
+            closeEmailMenus(stage);
             counter.textContent = `Question ${index + 1} of ${total}`;
             fill.style.width = `${(index / total) * 100}%`;
             scoreEl.textContent = `Score: ${score}`;
@@ -135,12 +167,13 @@
                     correct
                 );
             }
+            closeEmailMenus(stage);
             phishingBtn.disabled = true;
             safeBtn.disabled = true;
             actions.hidden = true;
             fbTitle.textContent = correct ?
                 "Correct!" :
-                `Not quite — this one was ${q.isPhishing ? "phishing" : "safe"}.`;
+                `Not quite this one was ${q.isPhishing ? "phishing" : "safe"}.`;
             fbExplain.textContent = q.explain;
             feedback.hidden = false;
             scoreEl.textContent = `Score: ${score}`;
@@ -195,6 +228,29 @@
                 });
             }
         }
+
+        stage.addEventListener("click", (event) => {
+            if (answered) return;
+
+            const menuToggle = event.target.closest(".sim-email-menu-toggle");
+            if (menuToggle) {
+                const menu = menuToggle.closest(".sim-email-menu");
+                const shouldOpen = !menu.classList.contains("is-open");
+                closeEmailMenus(stage);
+                if (shouldOpen) {
+                    menu.classList.add("is-open");
+                    menuToggle.setAttribute("aria-expanded", "true");
+                }
+                return;
+            }
+
+            if (event.target.closest(".sim-email-report-btn") || event.target.closest(".sim-sms-report-btn")) {
+                answer(true);
+                return;
+            }
+
+            closeEmailMenus(stage);
+        });
 
         phishingBtn.addEventListener("click", () => answer(true));
         safeBtn.addEventListener("click", () => answer(false));
