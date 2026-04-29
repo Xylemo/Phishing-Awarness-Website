@@ -257,39 +257,21 @@ function renderScenario(scenario) {
     return `
       <div class="sim-message sim-sms">
         <div class="sim-phone-shell">
-          <div class="sim-phone-status">
-            <span>9:41</span>
-            <div class="sim-phone-icons">
-              <span class="sim-phone-signal"></span>
-              <span class="sim-phone-wifi"></span>
-              <span class="sim-phone-battery"></span>
-            </div>
-          </div>
           <div class="sim-imessage-header">
-            <span class="sim-imessage-back">&#10094; Messages</span>
             <div class="sim-imessage-contact">
-              <span class="sim-imessage-avatar">${avatarInitial(scenario.sender)}</span>
               <div>
                 <strong>${escapeHtml(scenario.sender)}</strong>
-                <span>iMessage</span>
               </div>
             </div>
-            <span class="sim-imessage-info">i</span>
           </div>
           <div class="sim-imessage-thread">
-            <div class="sim-imessage-date">Today</div>
+            <div class="sim-imessage-phone">
             <div class="sim-sms-bubble">${escapeHtml(scenario.body)}</div>
             <div class="sim-imessage-alert">
               <p>If you did not expect this message from an unknown sender, it may be spam.</p>
               <button class="sim-sms-report-btn" type="button">Report Spam</button>
             </div>
           </div>
-          <div class="sim-imessage-compose">
-            <span class="sim-imessage-compose-icon">+</span>
-            <span class="sim-imessage-compose-field">iMessage</span>
-            <span class="sim-imessage-compose-icon">&#9654;</span>
-          </div>
-          <div class="sim-phone-home"></div>
         </div>
       </div>
     `;
@@ -299,60 +281,26 @@ function renderScenario(scenario) {
   const snippet = emailSnippet(scenario.body);
   return `
     <div class="sim-message sim-email">
-      <div class="sim-gmail-topbar">
-        <div class="sim-gmail-brand">
-          <span class="sim-gmail-brand-mark"></span>
-          <span>Gmail</span>
-        </div>
-        <div class="sim-gmail-search">Search in mail</div>
-        <div class="sim-gmail-user">${avatarInitial(scenario.fromName)}</div>
-      </div>
-      <div class="sim-gmail-layout">
-        <aside class="sim-gmail-nav" aria-hidden="true">
-          <div class="sim-gmail-compose">Compose</div>
-          <div class="sim-gmail-nav-item sim-gmail-nav-item-active">Inbox</div>
-          <div class="sim-gmail-nav-item">Starred</div>
-          <div class="sim-gmail-nav-item">Sent</div>
-          <div class="sim-gmail-nav-item">Drafts</div>
-        </aside>
-        <div class="sim-gmail-main">
-          <div class="sim-gmail-toolbar">
-            <strong>Inbox</strong>
-            <span>1 selected</span>
+      <article class="sim-email-card sim-gmail-page">
+        <h3 class="sim-email-title">${escapeHtml(scenario.subject)}</h3>
+        <div class="sim-email-menu">
+          <button class="sim-email-menu-toggle" type="button" aria-expanded="false" aria-label="More email actions">&#8942;</button>
+          <div class="sim-email-menu-panel">
+            <button class="sim-email-menu-action sim-email-report-btn" type="button">Report phishing</button>
           </div>
-          <div class="sim-gmail-list">
-            <div class="sim-gmail-row sim-gmail-row-active">
-              <span class="sim-gmail-row-star">&#9734;</span>
-              <span class="sim-gmail-row-from">${escapeHtml(scenario.fromName)}</span>
-              <span class="sim-gmail-row-subject">${escapeHtml(scenario.subject)}</span>
-              <span class="sim-gmail-row-snippet">${snippet}</span>
-              <span class="sim-gmail-row-time">Now</span>
-            </div>
-          </div>
-          <article class="sim-email-card">
-            <div class="sim-email-card-top">
-              <h3 class="sim-email-title">${escapeHtml(scenario.subject)}</h3>
-              <div class="sim-email-menu">
-                <button class="sim-email-menu-toggle" type="button" aria-expanded="false" aria-label="More email actions">&#8942;</button>
-                <div class="sim-email-menu-panel">
-                  <button class="sim-email-menu-action sim-email-report-btn" type="button">Report phishing</button>
-                </div>
-              </div>
-            </div>
-            <div class="sim-email-header">
-              <span class="sim-email-avatar">${avatarInitial(scenario.fromName)}</span>
-              <div class="sim-email-meta">
-                <div class="sim-email-sender-line">
-                  <strong>${escapeHtml(scenario.fromName)}</strong>
-                  <span>&lt;${escapeHtml(scenario.fromAddress)}&gt;</span>
-                </div>
-                <div class="sim-email-recipient-line">to me</div>
-              </div>
-            </div>
-            <div class="sim-email-body">${bodyHtml}</div>
-          </article>
         </div>
-      </div>
+        <div class="sim-email-header">
+          <span class="sim-email-avatar">${avatarInitial(scenario.fromName)}</span>
+          <div class="sim-email-meta">
+            <div class="sim-email-sender-line">
+              <strong>${escapeHtml(scenario.fromName)}</strong>
+              <span>&lt;${escapeHtml(scenario.fromAddress)}&gt;</span>
+            </div>
+            <div class="sim-email-recipient-line">to me</div>
+          </div>
+        </div>
+        <div class="sim-email-body">${bodyHtml}</div>
+      </article>
     </div>
   `;
 }
