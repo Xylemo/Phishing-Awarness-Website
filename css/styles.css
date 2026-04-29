@@ -952,14 +952,6 @@ p {
   margin-top: 4.5rem;
 }
 
-.sim-imessage-back,
-.sim-imessage-info {
-  color: #0a84ff;
-  font-size: 0.85rem;
-  white-space: nowrap;
-}
-
-
 .sim-imessage-contact {
   display: flex;
   align-items: center;
@@ -1090,44 +1082,6 @@ p {
   box-shadow: 0 24px 60px -36px rgba(15, 23, 42, 0.45);
 }
 
-.sim-gmail-topbar {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.15rem;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.sim-gmail-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  color: #5f6368;
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-
-.sim-gmail-brand-mark {
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 0.2rem;
-  background: linear-gradient(135deg, #ea4335 0 25%, #fbbc04 25% 50%, #34a853 50% 75%, #4285f4 75% 100%);
-}
-
-.sim-gmail-search {
-  min-height: 3rem;
-  display: flex;
-  align-items: center;
-  padding: 0 1rem;
-  border-radius: 999px;
-  background: #eaf1fb;
-  color: #5f6368;
-  font-size: 0.92rem;
-}
-
-.sim-gmail-user,
 .sim-email-avatar {
   width: 2.35rem;
   height: 2.35rem;
@@ -1136,125 +1090,6 @@ p {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-}
-
-.sim-gmail-user {
-  background: #dbeafe;
-  color: #1d4ed8;
-}
-
-.sim-gmail-layout {
-  display: grid;
-  grid-template-columns: 12rem 1fr;
-  min-height: 31rem;
-}
-
-.sim-gmail-nav {
-  padding: 1rem 0.7rem 1rem 0.95rem;
-  background: #f6f8fc;
-  border-right: 1px solid #e5e7eb;
-}
-
-.sim-gmail-compose {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 3rem;
-  padding: 0 1.15rem;
-  border-radius: 1rem;
-  background: #c2e7ff;
-  color: #0f172a;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.sim-gmail-nav-item {
-  display: flex;
-  align-items: center;
-  min-height: 2.45rem;
-  padding: 0 0.9rem;
-  border-radius: 0 999px 999px 0;
-  color: #475569;
-  font-size: 0.9rem;
-}
-
-.sim-gmail-nav-item-active {
-  background: #fce8e6;
-  color: #b3261e;
-  font-weight: 600;
-}
-
-.sim-gmail-main {
-  padding: 0.8rem 1rem 1.15rem;
-}
-
-.sim-gmail-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-  padding: 0 0.25rem;
-  color: #5f6368;
-  font-size: 0.86rem;
-}
-
-.sim-gmail-toolbar strong {
-  color: #111827;
-  font-size: 1rem;
-}
-
-.sim-gmail-list {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 1rem 1rem 0.65rem 0.65rem;
-  overflow: hidden;
-}
-
-.sim-gmail-row {
-  display: grid;
-  grid-template-columns: auto minmax(6rem, 11rem) minmax(8rem, 16rem) 1fr auto;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.9rem 1rem;
-  background: #f2f6fc;
-  color: #475569;
-  font-size: 0.88rem;
-  border-bottom: 1px solid #edf2f7;
-}
-
-.sim-gmail-row-star { grid-area: star; }
-.sim-gmail-row-from { grid-area: from; }
-.sim-gmail-row-subject { grid-area: subject; }
-.sim-gmail-row-snippet { grid-area: snippet; }
-.sim-gmail-row-time { grid-area: time; }
-
-.sim-gmail-row-active {
-  background: #d3e3fd;
-}
-
-.sim-gmail-row-star {
-  color: #9ca3af;
-  font-size: 1rem;
-}
-
-.sim-gmail-row-from,
-.sim-gmail-row-subject {
-  color: #111827;
-  font-weight: 600;
-}
-
-.sim-gmail-row-from,
-.sim-gmail-row-subject,
-.sim-gmail-row-snippet {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sim-gmail-row-time {
-  color: #475569;
-  font-size: 0.82rem;
 }
 
 .sim-email-card {
@@ -1341,14 +1176,6 @@ p {
   font-size: 0.9rem;
   font-weight: 500;
   line-height: 1.65;
-}
-
-.sim-email-card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
 }
 
 .sim-email-title {
@@ -3887,24 +3714,6 @@ p {
   .sim-phone-shell {
     min-height: 39rem;
   }
-
-  .sim-gmail-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sim-gmail-nav {
-    display: none;
-  }
-
-  .sim-gmail-row {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-areas:
-      "star from time"
-      ". subject subject"
-      ". snippet snippet";
-    align-items: start;
-    gap: 0.25rem 0.7rem;
-  }
 }
 
 @media (max-width: 640px) {
@@ -3925,31 +3734,8 @@ p {
     min-height: 36rem;
   }
 
-  .sim-gmail-topbar {
-    grid-template-columns: 1fr auto;
-    gap: 0.75rem;
-  }
-
-  .sim-gmail-brand {
-    font-size: 1.08rem;
-  }
-
-  .sim-gmail-search {
-    grid-column: 1 / -1;
-    order: 3;
-    min-height: 2.7rem;
-  }
-
-  .sim-gmail-main {
-    padding: 0.75rem;
-  }
-
   .sim-email-card {
     padding: 1rem;
-  }
-
-  .sim-email-card-top {
-    gap: 0.5rem;
   }
 
   .sim-email-title {
