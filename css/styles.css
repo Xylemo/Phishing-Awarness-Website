@@ -1297,6 +1297,15 @@ p {
   position: absolute;
   top: 16%;
   right: 4%;
+  z-index: 10;
+}
+
+.sim-gmail-page .sim-email-menu-toggle {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.sim-gmail-page .sim-email-menu-panel {
+  z-index: 11;
 }
 
 .sim-gmail-page .sim-email-header {
