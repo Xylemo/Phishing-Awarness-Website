@@ -357,6 +357,7 @@
 
         function finish() {
             stage.innerHTML = "";
+            actions.innerHTML = "";
             actions.hidden = true;
             progressEl.hidden = true;
             const pct = total > 0 ? score / total : 0;
@@ -367,6 +368,7 @@
                 pct >= 0.5 ? "Decent first pass. Run it again to sharpen the patterns you missed." :
                 "Plenty of room to grow. Re-read the related material and try this one again.";
             completeActions.innerHTML = `<button class="demo-button demo-button-next" type="button" data-quiz="restart">Try again</button>`;
+            
             complete.hidden = false;
             const restartBtn = container.querySelector('[data-quiz="restart"]');
             restartBtn.addEventListener("click", () => {

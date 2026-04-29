@@ -475,6 +475,7 @@ function next() {
 
 function finish() {
     stage.innerHTML = "";
+    actions.innerHTML = "";
     feedback.hidden = true;
     actions.hidden = true;
     progress.hidden = true;
