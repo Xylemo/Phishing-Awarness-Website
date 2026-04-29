@@ -105,11 +105,6 @@
         </div>
         <div class="sim-stage quiz-stage"></div>
         <div class="demo-actions quiz-actions"></div>
-        <div class="demo-feedback quiz-feedback" hidden>
-          <h3 class="quiz-fb-title"></h3>
-          <p class="quiz-fb-explain"></p>
-          <button class="demo-button demo-button-next" type="button" data-quiz="next">Next question →</button>
-        </div>
         <div class="demo-complete quiz-complete" hidden>
           <h2>Quiz complete</h2>
           <p class="quiz-complete-score"></p>
@@ -124,10 +119,6 @@
         const scoreEl = container.querySelector(".quiz-score");
         const stage = container.querySelector(".quiz-stage");
         const actions = container.querySelector(".quiz-actions");
-        const nextBtn = container.querySelector('[data-quiz="next"]');
-        const feedback = container.querySelector(".quiz-feedback");
-        const fbTitle = container.querySelector(".quiz-fb-title");
-        const fbExplain = container.querySelector(".quiz-fb-explain");
         const progressEl = container.querySelector(".quiz-progress");
         const complete = container.querySelector(".quiz-complete");
         const completeScore = container.querySelector(".quiz-complete-score");
@@ -140,6 +131,42 @@
             `;
         }
 
+        function nextLabel() {
+            return index === total - 1 ? "See results" : "Next question →";
+        }
+
+        function showInlineFeedback(q, correct) {
+            const host = q.type === "sms"
+                ? stage.querySelector(".sim-imessage-thread")
+                : q.type === "email"
+                    ? stage.querySelector(".sim-email-card")
+                    : stage.querySelector(".sim-url");
+            const target = q.type === "sms"
+                ? stage.querySelector(".sim-sms-bubble")
+                : q.type === "email"
+                    ? stage.querySelector(".sim-email-card")
+                    : stage.querySelector(".sim-url-bar");
+
+            if (host) {
+                host.querySelector(".sim-inline-feedback")?.remove();
+                host.classList.add("has-inline-feedback", `has-inline-feedback-${q.type}`);
+            }
+            if (target) {
+                target.classList.add("sim-highlight-target", q.isPhishing ? "is-phishing" : "is-safe");
+            }
+            if (!host) return;
+
+            const overlay = document.createElement("div");
+            overlay.className = `sim-inline-feedback sim-inline-feedback-${q.type} ${q.isPhishing ? "is-phishing" : "is-safe"}`;
+            overlay.innerHTML = `
+                <span class="sim-inline-feedback-badge">${q.isPhishing ? "Phishing" : "Safe"}</span>
+                <h4>${correct ? "Correct" : "Not quite"}: this one is ${q.isPhishing ? "phishing" : "safe"}.</h4>
+                <p>${escapeHtml(q.explain || "")}</p>
+                <button class="demo-button demo-button-next sim-inline-feedback-next" type="button" data-quiz-next="true">${nextLabel()}</button>
+            `;
+            host.appendChild(overlay);
+        }
+
         function show() {
             answered = false;
             const q = questions[index];
@@ -150,7 +177,6 @@
             counter.textContent = `Question ${index + 1} of ${total}`;
             fill.style.width = `${(index / total) * 100}%`;
             scoreEl.textContent = `Score: ${score}`;
-            feedback.hidden = true;
             actions.hidden = false;
         }
 
@@ -171,13 +197,8 @@
             closeEmailMenus(stage);
             actions.querySelectorAll("button").forEach((b) => { b.disabled = true; });
             actions.hidden = true;
-            fbTitle.textContent = correct ?
-                "Correct!" :
-                `Not quite this one was ${q.isPhishing ? "phishing" : "safe"}.`;
-            fbExplain.textContent = q.explain;
-            feedback.hidden = false;
             scoreEl.textContent = `Score: ${score}`;
-            nextBtn.textContent = index === total - 1 ? "See results" : "Next question →";
+            showInlineFeedback(q, correct);
         }
 
         function next() {
@@ -191,7 +212,6 @@
 
         function finish() {
             stage.innerHTML = "";
-            feedback.hidden = true;
             actions.hidden = true;
             progressEl.hidden = true;
             const pct = total > 0 ? score / total : 0;
@@ -230,6 +250,11 @@
         }
 
         stage.addEventListener("click", (event) => {
+            if (event.target.closest("[data-quiz-next]")) {
+                next();
+                return;
+            }
+
             if (answered) return;
 
             const menuToggle = event.target.closest(".sim-email-menu-toggle");
@@ -257,7 +282,6 @@
             if (btn) answer(false);
         });
 
-        nextBtn.addEventListener("click", next);
         show();
     }
 
