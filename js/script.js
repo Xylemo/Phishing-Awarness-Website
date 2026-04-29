@@ -169,8 +169,6 @@ function syncTopbarAuth() {
     }
   });
 
-  // Signed-in employees: route the "Simulations" nav link to their dashboard
-  // (admins keep the public /simulations/ link for previewing as an employee).
   if (user.role !== "admin") {
     document.querySelectorAll('a[href$="simulations/"], a[href$="../simulations/"]').forEach((link) => {
       link.setAttribute("href", root + "dashboard/");
