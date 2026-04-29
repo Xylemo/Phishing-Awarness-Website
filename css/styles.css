@@ -1515,7 +1515,7 @@ p {
 
 .sim-inline-feedback {
   position: absolute;
-  z-index: 4;
+  z-index: 20;
   width: min(24rem, calc(100% - 1.5rem));
   padding: 1rem 1rem 0.95rem;
   border-radius: 1rem;
@@ -1653,6 +1653,105 @@ p {
   gap: 1rem;
 }
 
+.sim-coach {
+  position: fixed;
+  z-index: 1000;
+  padding: 0.6rem 0.8rem 0.7rem;
+  border-radius: 0.7rem;
+  background: #ffffff;
+  color: #181818;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  width: max-content;
+  max-width: 16rem;
+  box-shadow: 0 14px 28px -14px rgba(15, 23, 42, 0.55);
+  transform: translateX(-50%);
+  pointer-events: none;
+
+  border: 1px solid var(--border);
+  border-color: #b4b4b4;
+}
+
+.has-inline-feedback-sms .sim-inline-feedback::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: inherit;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.sim-coach::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: inherit;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: 1px solid #b4b4b4;
+  border-top: 1px solid #b4b4b4;
+}
+
+.sim-coach.sim-coach-left {
+  transform: translate(-100%, -50%);
+
+}
+
+.sim-coach.sim-coach-left::before {
+  border-right: 1px solid #b4b4b4;
+  border-top: 1px solid #b4b4b4;
+  top: 50%;
+  left: auto;
+  right: -6px;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.sim-coach.sim-coach-right {
+  transform: translate(0, -50%);
+}
+
+.sim-coach.sim-coach-right::before {
+  border-left: 1px solid #b4b4b4;
+  border-bottom: 1px solid #b4b4b4;
+  border-right: 0;
+  border-top: 0;
+  top: 50%;
+  left: -6px;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.sim-coach-text {
+  display: block;
+}
+
+.sim-coach strong {
+  color: #1a8bfc;
+  font-weight: 600;
+}
+
+.sim-coach-dismiss {
+  pointer-events: auto;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: rgb(201, 201, 201);
+  color: #000000;
+  font: inherit;
+  font-size: 0.74rem;
+  cursor: pointer;
+}
+
+.sim-coach-dismiss:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
 .history-section {
   padding: 4rem 0 5rem;
   background: var(--surface);
@@ -1735,6 +1834,44 @@ p {
   background-image: url("../assets/card.png");
   color: #ffffff;
   border: 0;
+}
+
+.article-references {
+  margin-top: 2rem;
+  padding: 1.5rem 1.75rem 1.6rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.article-references h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.article-references ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.article-references li + li {
+  margin-top: 0.4rem;
+}
+
+.article-references a {
+  color: var(--accent, #2563eb);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(37, 99, 235, 0.25);
+  word-break: break-word;
+}
+
+.article-references a:hover {
+  border-bottom-color: currentColor;
 }
 
 .history-callout h3 {
@@ -2993,7 +3130,7 @@ p {
   right: 1.5rem;
   bottom: 1.5rem;
   z-index: 30;
-  width: min(20rem, calc(100% - 3rem));
+  width: min(20.8rem, calc(100% - 3rem));
   padding: 1rem 1.15rem;
   background: #ffffff;
   border: 1px solid var(--border);

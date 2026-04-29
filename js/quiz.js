@@ -167,17 +167,145 @@
             host.appendChild(overlay);
         }
 
+        const coachShown = new Set();
+        const activeCoaches = [];
+
+        function clampHorizontally(coach) {
+            requestAnimationFrame(() => {
+                const cr = coach.getBoundingClientRect();
+                const margin = 8;
+                let leftPx = parseFloat(coach.style.left);
+                if (cr.right > window.innerWidth - margin) {
+                    leftPx -= cr.right - (window.innerWidth - margin);
+                }
+                if (cr.left < margin) {
+                    leftPx += margin - cr.left;
+                }
+                coach.style.left = `${leftPx}px`;
+            });
+        }
+
+        function placeCoachBelow(coach, target) {
+            if (!target || !coach.isConnected) return;
+            const r = target.getBoundingClientRect();
+            coach.style.left = `${r.left + r.width / 2}px`;
+            coach.style.top = `${r.bottom + 10}px`;
+            clampHorizontally(coach);
+        }
+
+        function placeCoachLeftOf(coach, target) {
+            if (!target || !coach.isConnected) return;
+            const r = target.getBoundingClientRect();
+            coach.style.left = `${r.left - 12}px`;
+            coach.style.top = `${r.top + r.height / 2}px`;
+        }
+
+        function placeCoachRightOf(coach, target) {
+            if (!target || !coach.isConnected) return;
+            const r = target.getBoundingClientRect();
+            coach.style.left = `${r.right + 12}px`;
+            coach.style.top = `${r.top + r.height / 2}px`;
+        }
+
+        function attachCoach(target, html, placement) {
+            if (!target) return null;
+            const coach = document.createElement("div");
+            const placementClass =
+                placement === "left" ? "sim-coach-left" :
+                placement === "right" ? "sim-coach-right" : "";
+            coach.className = placementClass ? `sim-coach ${placementClass}` : "sim-coach";
+            coach.innerHTML = html;
+            document.body.appendChild(coach);
+            const placer =
+                placement === "left" ? placeCoachLeftOf :
+                placement === "right" ? placeCoachRightOf :
+                placeCoachBelow;
+            placer(coach, target);
+            const reposition = () => placer(coach, target);
+            window.addEventListener("scroll", reposition, true);
+            window.addEventListener("resize", reposition);
+            activeCoaches.push({ coach, reposition });
+            return coach;
+        }
+
+        function dismissCoaches() {
+            while (activeCoaches.length) {
+                const { coach, reposition } = activeCoaches.pop();
+                window.removeEventListener("scroll", reposition, true);
+                window.removeEventListener("resize", reposition);
+                coach.remove();
+            }
+            document.querySelectorAll(".sim-coach").forEach((c) => c.remove());
+        }
+
+        function waitForLoader() {
+            const loader = document.getElementById("site-loader");
+            if (!loader || loader.classList.contains("is-hidden")) return Promise.resolve();
+            return new Promise((resolve) => {
+                const done = () => {
+                    classObs.disconnect();
+                    removalObs.disconnect();
+                    resolve();
+                };
+                const classObs = new MutationObserver(() => {
+                    if (loader.classList.contains("is-hidden")) done();
+                });
+                classObs.observe(loader, { attributes: true, attributeFilter: ["class"] });
+                const removalObs = new MutationObserver(() => {
+                    if (!document.body.contains(loader)) done();
+                });
+                removalObs.observe(document.body, { childList: true, subtree: true });
+            });
+        }
+
+        function showFirstScenarioCoach(q) {
+            if (coachShown.has(q.type)) return;
+            coachShown.add(q.type);
+            waitForLoader().then(() => {
+                if (answered || questions[index] !== q) return;
+
+                if (q.type === "sms") {
+                    const target = stage.querySelector(".sim-sms-report-btn");
+                    attachCoach(target, `
+                        <span class="sim-coach-text">Tap <strong>Report Spam</strong> if this text looks like phishing.</span>
+                        <button class="sim-coach-dismiss" type="button" data-coach-dismiss>Got it</button>
+                    `, "right");
+                } else if (q.type === "email") {
+                    const target = stage.querySelector(".sim-email-menu-toggle");
+                    attachCoach(target, `
+                        <span class="sim-coach-text">Open the <strong>three dots (⋮)</strong> and pick <strong>Report phishing</strong> to flag this email.</span>
+                        <button class="sim-coach-dismiss" type="button" data-coach-dismiss>Got it</button>
+                    `, "left");
+                }
+
+                const safeBtn = actions.querySelector('[data-quiz="safe"]');
+                attachCoach(safeBtn, `
+                    <span class="sim-coach-text">If nothing looks off, click <strong>Continue Safe</strong> to move on.</span>
+                    <button class="sim-coach-dismiss" type="button" data-coach-dismiss>Got it</button>
+                `, "left");
+            });
+        }
+
+        const documentCoachHandler = (event) => {
+            if (event.target.closest("[data-coach-dismiss]")) {
+                dismissCoaches();
+            }
+        };
+        document.addEventListener("click", documentCoachHandler);
+
         function show() {
             answered = false;
             const q = questions[index];
             stage.innerHTML = renderScenario(q);
             closeEmailMenus(stage);
+            dismissCoaches();
             actions.innerHTML = renderActions();
             actions.classList.add("is-single");
             counter.textContent = `Question ${index + 1} of ${total}`;
             fill.style.width = `${(index / total) * 100}%`;
             scoreEl.textContent = `Score: ${score}`;
             actions.hidden = false;
+            showFirstScenarioCoach(q);
         }
 
         function answer(chose) {
@@ -195,6 +323,7 @@
                 );
             }
             closeEmailMenus(stage);
+            dismissCoaches();
             actions.querySelectorAll("button").forEach((b) => { b.disabled = true; });
             actions.hidden = true;
             scoreEl.textContent = `Score: ${score}`;
@@ -228,6 +357,7 @@
                 index = 0;
                 score = 0;
                 runId = null;
+                coachShown.clear();
                 if (window.Phishy && window.Phishy.analytics) {
                     window.Phishy.analytics
                         .startSimulation(simulationId)
@@ -250,6 +380,11 @@
         }
 
         stage.addEventListener("click", (event) => {
+            if (event.target.closest("[data-coach-dismiss]")) {
+                dismissCoaches();
+                return;
+            }
+
             if (event.target.closest("[data-quiz-next]")) {
                 next();
                 return;
@@ -278,6 +413,10 @@
         });
 
         actions.addEventListener("click", (event) => {
+            if (event.target.closest("[data-coach-dismiss]")) {
+                dismissCoaches();
+                return;
+            }
             const btn = event.target.closest('[data-quiz="safe"]');
             if (btn) answer(false);
         });

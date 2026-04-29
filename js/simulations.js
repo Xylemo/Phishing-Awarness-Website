@@ -7,10 +7,7 @@ const scenarios = [
       "Please confirm your details and pay the $2.99 redelivery fee at " +
       "usps-redelivery-portal.cc/track to avoid return.",
     isPhishing: true,
-    explain:
-      "The USPS does not text you to collect a redelivery fee, and the link " +
-      "uses a lookalike domain (usps-redelivery-portal.cc) on a suspicious " +
-      "top-level domain. Real USPS tracking lives on usps.com.",
+    explain: "USPS doesn't text for redelivery fees. The link is a lookalike on a sketchy .cc domain.",
   },
   {
     type: "email",
@@ -22,10 +19,7 @@ const scenarios = [
       "If you didn't add this key, you can remove it and reset your password " +
       "by visiting https://github.com/settings/keys.\n\nThanks,\nThe GitHub Team",
     isPhishing: false,
-    explain:
-      "The sender domain is github.com, the link points to github.com, the " +
-      "greeting uses your real username, and the message tells you what to do " +
-      "if it wasn't you instead of demanding immediate action.",
+    explain: "Sender and link are both github.com. It tells you what to do if it wasn't you, instead of demanding action.",
   },
   {
     type: "sms",
@@ -34,11 +28,7 @@ const scenarios = [
       "Bank of Amrica Alert: We detected unusual activity on your card. " +
       "Verify your identity now to avoid a freeze: bankofamerica-secure.support/verify",
     isPhishing: true,
-    explain:
-      "Bank of Amrica is misspelled, and the link uses a " +
-      "lookalike domain (bankofamerica-secure.support) instead of the real " +
-      "bankofamerica.com. Banks also won't ask you to verify your identity " +
-      "through a text link.",
+    explain: "\"Amrica\" is misspelled and the link is a lookalike domain. Banks don't verify identity through SMS links.",
   },
   {
     type: "email",
@@ -52,22 +42,14 @@ const scenarios = [
       "Click here to verify: http://apple-id-verify.com/unlock\n\n" +
       "Apple Support Team",
     isPhishing: true,
-    explain:
-      "The sender domain (apple-id-verify.com) is not apple.com. The greeting " +
-      "is generic ('Dear Customer'), the tone is urgent, and the threat of " +
-      "permanent disablement is meant to rush you. Real Apple emails come from " +
-      "apple.com and link to appleid.apple.com.",
+    explain: "Sender isn't apple.com, greeting is generic, and the 24-hour disablement threat is pure pressure.",
   },
   {
     type: "sms",
     sender: "729-725 (Verify)",
     body: "Your Google verification code is 482917. Do not share this code with anyone.",
     isPhishing: false,
-    explain:
-      "Google's short code (729-725) is consistent with their real 2FA " +
-      "messages, the code is the message itself (no link to click), and it " +
-      "explicitly tells you not to share it. As long as you actually requested " +
-      "a sign-in, this is normal.",
+    explain: "Real Google short code, no link, and a clear \"don't share\" warning. Normal 2FA.",
   },
   {
     type: "email",
@@ -80,11 +62,7 @@ const scenarios = [
       "the backs and email me the codes ASAP. I'll reimburse you when I land.\n\n" +
       "Thanks,\nMark",
     isPhishing: true,
-    explain:
-      "Classic whaling attempt. The 'CEO' is emailing from a personal gmail.com " +
-      "address instead of the company domain, the request is urgent, and the " +
-      "ask (gift card codes) is a textbook scam. Real executives don't ask " +
-      "employees to buy gift cards over email.",
+    explain: "CEO whaling. Personal gmail address, urgency, and gift cards — textbook scam.",
   },
   {
     type: "sms",
@@ -93,10 +71,7 @@ const scenarios = [
       "Congrats! You've been selected for a $1,000 Amazon gift card. " +
       "Claim within 24 hours: amzn-rewards.top/claim?id=8821",
     isPhishing: true,
-    explain:
-      "Unsolicited prizes that demand action 'within 24 hours' are almost " +
-      "always scams, and the link uses a lookalike (amzn-rewards.top) on a " +
-      ".top domain rather than amazon.com.",
+    explain: "Unsolicited prize + 24-hour deadline + lookalike .top domain = scam.",
   },
   {
     type: "email",
@@ -108,10 +83,7 @@ const scenarios = [
       "renewed on June 1 for $10.99. View your receipt or manage your plan " +
       "anytime at spotify.com/account.\n\n- The Spotify team",
     isPhishing: false,
-    explain:
-      "Sender is spotify.com, the link goes to spotify.com, it greets you by " +
-      "name, and it's an informational receipt &mdash; no urgency, no request " +
-      "for credentials. This is what a legitimate transactional email looks like.",
+    explain: "Sender and link are spotify.com. Named greeting, no urgency — a normal receipt.",
   },
   {
     type: "email",
@@ -123,11 +95,7 @@ const scenarios = [
       "It will expire in 24 hours.\n\nView and sign now: " +
       "http://docu-sign-secure.net/sign/x8H22\n\nDocuSign Service Team",
     isPhishing: true,
-    explain:
-      "Real DocuSign messages come from docusign.com or docusign.net, not " +
-      "'docu-sign-secure.net'. The 24-hour expiration pressure plus a generic " +
-      "greeting is the giveaway. Real signature requests are tied to a person " +
-      "you do business with.",
+    explain: "Real DocuSign uses docusign.com, not a hyphenated lookalike. Generic greeting + 24-hour expiry seals it.",
   },
   {
     type: "sms",
@@ -136,11 +104,7 @@ const scenarios = [
       "American Airlines: Your flight AA1283 to DFW is now departing from " +
       "Gate C12. Boarding at 14:30. View your boarding pass in the app.",
     isPhishing: false,
-    explain:
-      "Short codes (5-6 digit numbers) come from registered senders. The " +
-      "message references a specific flight and gate, doesn't include a link " +
-      "to click, and points you to the official app. That's the legitimate " +
-      "pattern for airline notifications.",
+    explain: "Registered short code, specific flight info, no link — the legit airline pattern.",
   },
 ];
 
@@ -312,17 +276,138 @@ function updateProgress() {
   scoreLabel.textContent = `Score: ${score}`;
 }
 
+const coachShown = new Set();
+const activeCoaches = [];
+
+function clampHorizontally(coach) {
+  requestAnimationFrame(() => {
+    const cr = coach.getBoundingClientRect();
+    const margin = 8;
+    let leftPx = parseFloat(coach.style.left);
+    if (cr.right > window.innerWidth - margin) {
+      leftPx -= cr.right - (window.innerWidth - margin);
+    }
+    if (cr.left < margin) {
+      leftPx += margin - cr.left;
+    }
+    coach.style.left = `${leftPx}px`;
+  });
+}
+
+function placeCoachBelow(coach, target) {
+  if (!target || !coach.isConnected) return;
+  const r = target.getBoundingClientRect();
+  coach.style.left = `${r.left + r.width / 2}px`;
+  coach.style.top = `${r.bottom + 10}px`;
+  clampHorizontally(coach);
+}
+
+function placeCoachLeftOf(coach, target) {
+  if (!target || !coach.isConnected) return;
+  const r = target.getBoundingClientRect();
+  coach.style.left = `${r.left - 12}px`;
+  coach.style.top = `${r.top + r.height / 2}px`;
+}
+
+function placeCoachRightOf(coach, target) {
+  if (!target || !coach.isConnected) return;
+  const r = target.getBoundingClientRect();
+  coach.style.left = `${r.right + 12}px`;
+  coach.style.top = `${r.top + r.height / 2}px`;
+}
+
+function attachCoach(target, html, placement) {
+  if (!target) return null;
+  const coach = document.createElement("div");
+  const placementClass =
+    placement === "left" ? "sim-coach-left" :
+    placement === "right" ? "sim-coach-right" : "";
+  coach.className = placementClass ? `sim-coach ${placementClass}` : "sim-coach";
+  coach.innerHTML = html;
+  document.body.appendChild(coach);
+  const placer =
+    placement === "left" ? placeCoachLeftOf :
+    placement === "right" ? placeCoachRightOf :
+    placeCoachBelow;
+  placer(coach, target);
+  const reposition = () => placer(coach, target);
+  window.addEventListener("scroll", reposition, true);
+  window.addEventListener("resize", reposition);
+  activeCoaches.push({ coach, reposition });
+  return coach;
+}
+
+function dismissCoaches() {
+  while (activeCoaches.length) {
+    const { coach, reposition } = activeCoaches.pop();
+    window.removeEventListener("scroll", reposition, true);
+    window.removeEventListener("resize", reposition);
+    coach.remove();
+  }
+  document.querySelectorAll(".sim-coach").forEach((c) => c.remove());
+}
+
+function waitForLoader() {
+  const loader = document.getElementById("site-loader");
+  if (!loader || loader.classList.contains("is-hidden")) return Promise.resolve();
+  return new Promise((resolve) => {
+    const done = () => {
+      classObs.disconnect();
+      removalObs.disconnect();
+      resolve();
+    };
+    const classObs = new MutationObserver(() => {
+      if (loader.classList.contains("is-hidden")) done();
+    });
+    classObs.observe(loader, { attributes: true, attributeFilter: ["class"] });
+    const removalObs = new MutationObserver(() => {
+      if (!document.body.contains(loader)) done();
+    });
+    removalObs.observe(document.body, { childList: true, subtree: true });
+  });
+}
+
+function showFirstScenarioCoach(scenario) {
+  if (coachShown.has(scenario.type)) return;
+  coachShown.add(scenario.type);
+  waitForLoader().then(() => {
+    if (answered || scenarios[index] !== scenario) return;
+
+    if (scenario.type === "sms") {
+      const target = stage.querySelector(".sim-sms-report-btn");
+      attachCoach(target, `
+        <span class="sim-coach-text">Tap <strong>Report Spam</strong> if this text looks like phishing.</span>
+        <button class="sim-coach-dismiss" type="button" data-coach-dismiss>Got it</button>
+      `, "right");
+    } else if (scenario.type === "email") {
+      const target = stage.querySelector(".sim-email-menu-toggle");
+      attachCoach(target, `
+        <span class="sim-coach-text">Open the <strong>three dots (⋮)</strong> and pick <strong>Report phishing</strong> to flag this email.</span>
+        <button class="sim-coach-dismiss" type="button" data-coach-dismiss>Got it</button>
+      `, "left");
+    }
+
+    const safeBtn = actions.querySelector('[data-answer="safe"]');
+    attachCoach(safeBtn, `
+      <span class="sim-coach-text">If nothing looks off, click <strong>Continue Safe</strong> to move on.</span>
+      <button class="sim-coach-dismiss" type="button" data-coach-dismiss>Got it</button>
+    `, "left");
+  });
+}
+
 function showScenario() {
   answered = false;
   const scenario = scenarios[index];
   stage.innerHTML = renderScenario(scenario);
   stage.classList.remove("sim-stage-answered");
   closeEmailMenus(stage);
+  dismissCoaches();
   actions.innerHTML = renderActions(scenario);
   actions.classList.toggle("is-single", scenario.type !== "url");
   feedback.hidden = true;
   actions.hidden = false;
   updateProgress();
+  showFirstScenarioCoach(scenario);
 }
 
 function answer(userPickedPhishing) {
@@ -343,6 +428,7 @@ function answer(userPickedPhishing) {
   }
 
   closeEmailMenus(stage);
+  dismissCoaches();
   stage.classList.add("sim-stage-answered");
   stage.querySelectorAll("button").forEach(btn => {
     btn.disabled = true;
@@ -411,6 +497,7 @@ function finish() {
 function restart() {
   index = 0;
   score = 0;
+  coachShown.clear();
   complete.hidden = true;
   progress.hidden = false;
   startSimRun();
@@ -418,12 +505,21 @@ function restart() {
 }
 
 actions.addEventListener("click", event => {
+  if (event.target.closest("[data-coach-dismiss]")) {
+    dismissCoaches();
+    return;
+  }
   const actionBtn = event.target.closest("[data-answer]");
   if (!actionBtn || answered) return;
   answer(actionBtn.dataset.answer === "phishing");
 });
 
 stage.addEventListener("click", event => {
+  if (event.target.closest("[data-coach-dismiss]")) {
+    dismissCoaches();
+    return;
+  }
+
   if (event.target.closest("[data-inline-next]")) {
     next();
     return;
@@ -453,6 +549,12 @@ stage.addEventListener("click", event => {
 
 nextBtn.addEventListener("click", next);
 restartBtn.addEventListener("click", restart);
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest("[data-coach-dismiss]")) {
+    dismissCoaches();
+  }
+});
 
 showScenario();
 

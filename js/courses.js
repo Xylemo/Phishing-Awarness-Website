@@ -137,25 +137,22 @@
   const catalog = [
     {
       slug: "smishing",
-      title: "Smishing: Spotting Phishing Texts",
-      description:
-        "Five SMS scenarios. Decide whether each text is phishing (smishing) or a legitimate message.",
+      title: "Smishing",
+      description: "Five SMS scenarios.",
       durationMin: 5,
       questions: smsList,
     },
     {
       slug: "email-phishing",
-      title: "Email Phishing: Reading Suspicious Mail",
-      description:
-        "Five Gmail scenarios. Inspect the sender, subject, and body to decide whether each email is phishing or safe.",
+      title: "Email Phishing",
+      description: "Five Gmail scenarios.",
       durationMin: 8,
       questions: emailList,
     },
     {
       slug: "mixed-phishing",
-      title: "Mixed Phishing Drill",
-      description:
-        "A mixed bag of texts and emails. Switch contexts quickly and apply the warning signs you've learned.",
+      title: "Mixed Phishing",
+      description: "Texts and emails mixed.",
       durationMin: 10,
       questions: [
         SMS.sms1,
