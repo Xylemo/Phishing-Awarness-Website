@@ -1,102 +1,112 @@
 // All simulation scenarios
-const scenarios = [{
-        type: "sms",
-        sender: "+1 (737) 555-0142",
-        body: "USPS: Your package could not be delivered due to an incomplete address. " +
-            "Please confirm your details and pay the $2.99 redelivery fee at " +
-            "usps-redelivery-portal.cc/track to avoid return.",
-        isPhishing: true,
-        explain: "USPS doesn't text for redelivery fees. The link is a lookalike on a sketchy .cc domain.",
-    },
-    {
-        type: "email",
-        fromName: "GitHub",
-        fromAddress: "noreply@github.com",
-        subject: "[GitHub] A new SSH key was added to your account",
-        body: "Hey Guest,\n\nA new SSH key was added to your account.\n\n" +
-            "If you didn't add this key, you can remove it and reset your password " +
-            "by visiting https://github.com/settings/keys.\n\nThanks,\nThe GitHub Team",
-        isPhishing: false,
-        explain: "Sender and link are both github.com. It tells you what to do if it wasn't you, instead of demanding action.",
-    },
-    {
-        type: "sms",
-        sender: "+1 (415) 555-0199",
-        body: "Bank of Amrica Alert: We detected unusual activity on your card. " +
-            "Verify your identity now to avoid a freeze: bankofamerica-secure.support/verify",
-        isPhishing: true,
-        explain: "\"Amrica\" is misspelled and the link is a lookalike domain. Banks don't verify identity through SMS links.",
-    },
-    {
-        type: "email",
-        fromName: "Apple Support",
-        fromAddress: "support@apple-id-verify.com",
-        subject: "Your Apple ID has been locked",
-        body: "Dear Customer,\n\nYour Apple ID has been temporarily locked due to " +
-            "suspicious activity. To restore access, you must verify your account " +
-            "within 24 hours or it will be permanently disabled.\n\n" +
-            "Click here to verify: http://apple-id-verify.com/unlock\n\n" +
-            "Apple Support Team",
-        isPhishing: true,
-        explain: "Sender isn't apple.com, greeting is generic, and the 24-hour disablement threat is pure pressure.",
-    },
-    {
-        type: "sms",
-        sender: "729-725 (Verify)",
-        body: "Your Google verification code is 482917. Do not share this code with anyone.",
-        isPhishing: false,
-        explain: "Real Google short code, no link, and a clear \"don't share\" warning. Normal 2FA.",
-    },
-    {
-        type: "email",
-        fromName: "Mark Stevens, CEO",
-        fromAddress: "mark.stevens.ceo@gmail.com",
-        subject: "Quick favor - need this done before my flight",
-        body: "Hi,\n\nI'm boarding a flight in 20 minutes and need a favor. Can you " +
-            "pick up five $200 Apple gift cards for a client thank you? Scratch off " +
-            "the backs and email me the codes ASAP. I'll reimburse you when I land.\n\n" +
-            "Thanks,\nMark",
-        isPhishing: true,
-        explain: "CEO whaling. Personal gmail address, urgency, and gift cards, textbook scam.",
-    },
-    {
-        type: "sms",
-        sender: "+1 (302) 555-0173",
-        body: "Congrats! You've been selected for a $1,000 Amazon gift card. " +
-            "Claim within 24 hours: amzn-rewards.top/claim?id=8821",
-        isPhishing: true,
-        explain: "Unsolicited prize + 24-hour deadline + lookalike .top domain = scam.",
-    },
-    {
-        type: "email",
-        fromName: "Spotify",
-        fromAddress: "no-reply@spotify.com",
-        subject: "Your June receipt from Spotify",
-        body: "Hi Leo,\n\nThanks for being a Premium member. Your subscription " +
-            "renewed on June 1 for $10.99. View your receipt or manage your plan " +
-            "anytime at spotify.com/account.\n\n- The Spotify team",
-        isPhishing: false,
-        explain: "Sender and link are spotify.com. Named greeting, no urgency, a normal receipt.",
-    },
-    {
-        type: "email",
-        fromName: "DocuSign",
-        fromAddress: "service@docu-sign-secure.net",
-        subject: "Document waiting for your signature",
-        body: "Hello,\n\nYou have a confidential document awaiting your signature. " +
-            "It will expire in 24 hours.\n\nView and sign now: " +
-            "http://docu-sign-secure.net/sign/x8H22\n\nDocuSign Service Team",
-        isPhishing: true,
-        explain: "Real DocuSign uses docusign.com, not a hyphenated lookalike. Generic greeting + 24-hour expiry seals it.",
-    },
-    {
-        type: "sms",
-        sender: "AA-FLT (24411)",
-        body: "American Airlines: Your flight AA1283 to DFW is now departing from " +
-            "Gate C12. Boarding at 14:30. View your boarding pass in the app.",
-        isPhishing: false,
-        explain: "Registered short code, specific flight info, no link, the legit airline pattern.",
-    },
+const scenarios = [
+  {
+    type: "sms",
+    sender: "+1 (737) 555-0142",
+    body:
+      "USPS: Your package could not be delivered due to an incomplete address. " +
+      "Please confirm your details and pay the $2.99 redelivery fee at " +
+      "usps-redelivery-portal.cc/track to avoid having your package returned.",
+    isPhishing: true,
+    explain: "USPS doesn't text customers about redelivery fees. The link is a lookalike domain on a suspicious .cc site.",
+  },
+  {
+    type: "email",
+    fromName: "GitHub",
+    fromAddress: "noreply@github.com",
+    subject: "[GitHub] A new SSH key was added to your account",
+    body:
+      "Hey Guest,\n\nA new SSH key was added to your account.\n\n" +
+      "If you did not add this key, you can remove it and reset your password " +
+      "by visiting https://github.com/settings/keys.\n\nThanks,\nThe GitHub Team",
+    isPhishing: false,
+    explain: "The sender and link are both from github.com. It provides guidance if the action wasn't you, rather than demanding immediate action.",
+  },
+  {
+    type: "sms",
+    sender: "+1 (415) 555-0199",
+    body:
+      "Bank of Amrica Alert: We detected unusual activity on your card. " +
+      "Verify your identity now to avoid a freeze: bankofamerica-secure.support/verify",
+    isPhishing: true,
+    explain: "\"Amrica\" is misspelled and the link is a lookalike domain. Banks do not verify identities through SMS links.",
+  },
+  {
+    type: "email",
+    fromName: "Apple Support",
+    fromAddress: "support@apple-id-verify.com",
+    subject: "Your Apple ID has been locked",
+    body:
+      "Dear Customer,\n\nYour Apple ID has been temporarily locked due to " +
+      "suspicious activity. To restore access, you must verify your account " +
+      "within 24 hours or it will be permanently disabled.\n\n" +
+      "Click here to verify: http://apple-id-verify.com/unlock\n\n" +
+      "Apple Support Team",
+    isPhishing: true,
+    explain: "The sender is not from apple.com, the greeting is generic, and the 24-hour disablement threat creates urgency - a sign of common phishing tactics.",
+  },
+  {
+    type: "sms",
+    sender: "729-725 (Verify)",
+    body: "Your Google verification code is 482917. Do not share this code with anyone.",
+    isPhishing: false,
+    explain: "This is a legitimate Google short code. There is no link, and it clearly warns not to share the code - typical for 2FA messages.",
+  },
+  {
+    type: "email",
+    fromName: "Mark Stevens, CEO",
+    fromAddress: "mark.stevens.ceo@gmail.com",
+    subject: "Quick favor - need this done before my flight",
+    body:
+      "Hi,\n\nI'm boarding a flight in 20 minutes and need a favor. Can you " +
+      "pick up five $200 Apple gift cards for a client thank-you? Scratch off " +
+      "the backs and email me the codes ASAP. I'll reimburse you when I land.\n\n" +
+      "Thanks,\nMark",
+    isPhishing: true,
+    explain: "This is a CEO impersonation (whaling) scam. It uses a personal Gmail address, urgency, and gift cards — common red flags.",
+  },
+  {
+    type: "sms",
+    sender: "+1 (302) 555-0173",
+    body:
+      "Congrats! You've been selected for a $1,000 Amazon gift card. " +
+      "Claim within 24 hours: amzn-rewards.top/claim?id=8821",
+    isPhishing: true,
+    explain: "An unsolicited prize, a 24-hour deadline, and a lookalike .top domain are all strong indicators of a scam.",
+  },
+  {
+    type: "email",
+    fromName: "Spotify",
+    fromAddress: "no-reply@spotify.com",
+    subject: "Your June receipt from Spotify",
+    body:
+      "Hi Leo,\n\nThanks for being a Premium member. Your subscription " +
+      "renewed on June 1 for $10.99. You can view your receipt or manage your plan " +
+      "anytime at spotify.com/account.\n\n- The Spotify team",
+    isPhishing: false,
+    explain: "The sender and link are spotify.com. It uses a named greeting, no urgency — typical of a legitimate receipt.",
+  },
+  {
+    type: "email",
+    fromName: "DocuSign",
+    fromAddress: "service@docu-sign-secure.net",
+    subject: "Document waiting for your signature",
+    body:
+      "Hello,\n\nYou have a confidential document awaiting your signature. " +
+      "It will expire in 24 hours.\n\nView and sign now: " +
+      "http://docu-sign-secure.net/sign/x8H22\n\nDocuSign Service Team",
+    isPhishing: true,
+    explain: "Real DocuSign emails come from docusign.com, not a hyphenated lookalike. The generic greeting and 24-hour deadline are red flags.",
+  },
+  {
+    type: "sms",
+    sender: "AA-FLT (24411)",
+    body:
+      "American Airlines: Your flight AA1283 to DFW is now departing from " +
+      "Gate C12. Boarding at 14:30. View your boarding pass in the app.",
+    isPhishing: false,
+    explain: "This message comes from a registered short code, includes specific flight details, and contains no suspicious links — this is a legitimate airline notification.",
+  },
 ];
 
 
