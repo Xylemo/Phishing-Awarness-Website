@@ -104,10 +104,7 @@
           <span class="quiz-score"></span>
         </div>
         <div class="sim-stage quiz-stage"></div>
-        <div class="demo-actions quiz-actions">
-          <button class="demo-button demo-button-danger" type="button" data-quiz="phishing">Phishing</button>
-          <button class="demo-button demo-button-safe" type="button" data-quiz="safe">Safe</button>
-        </div>
+        <div class="demo-actions quiz-actions"></div>
         <div class="demo-feedback quiz-feedback" hidden>
           <h3 class="quiz-fb-title"></h3>
           <p class="quiz-fb-explain"></p>
@@ -127,8 +124,6 @@
         const scoreEl = container.querySelector(".quiz-score");
         const stage = container.querySelector(".quiz-stage");
         const actions = container.querySelector(".quiz-actions");
-        const phishingBtn = container.querySelector('[data-quiz="phishing"]');
-        const safeBtn = container.querySelector('[data-quiz="safe"]');
         const nextBtn = container.querySelector('[data-quiz="next"]');
         const feedback = container.querySelector(".quiz-feedback");
         const fbTitle = container.querySelector(".quiz-fb-title");
@@ -139,18 +134,24 @@
         const completeMsg = container.querySelector(".quiz-complete-msg");
         const completeActions = container.querySelector(".quiz-complete-actions");
 
+        function renderActions() {
+            return `
+                <button class="demo-button demo-button-safe" type="button" data-quiz="safe">Continue Safe</button>
+            `;
+        }
+
         function show() {
             answered = false;
             const q = questions[index];
             stage.innerHTML = renderScenario(q);
             closeEmailMenus(stage);
+            actions.innerHTML = renderActions();
+            actions.classList.add("is-single");
             counter.textContent = `Question ${index + 1} of ${total}`;
             fill.style.width = `${(index / total) * 100}%`;
             scoreEl.textContent = `Score: ${score}`;
             feedback.hidden = true;
             actions.hidden = false;
-            phishingBtn.disabled = false;
-            safeBtn.disabled = false;
         }
 
         function answer(chose) {
@@ -168,8 +169,7 @@
                 );
             }
             closeEmailMenus(stage);
-            phishingBtn.disabled = true;
-            safeBtn.disabled = true;
+            actions.querySelectorAll("button").forEach((b) => { b.disabled = true; });
             actions.hidden = true;
             fbTitle.textContent = correct ?
                 "Correct!" :
@@ -252,8 +252,11 @@
             closeEmailMenus(stage);
         });
 
-        phishingBtn.addEventListener("click", () => answer(true));
-        safeBtn.addEventListener("click", () => answer(false));
+        actions.addEventListener("click", (event) => {
+            const btn = event.target.closest('[data-quiz="safe"]');
+            if (btn) answer(false);
+        });
+
         nextBtn.addEventListener("click", next);
         show();
     }
