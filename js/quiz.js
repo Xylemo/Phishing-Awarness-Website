@@ -316,7 +316,7 @@
             actions.innerHTML = renderActions();
             actions.classList.add("is-single");
             counter.textContent = `Question ${index + 1} of ${total}`;
-            fill.style.width = `${(index / total) * 100}%`;
+            fill.style.width = `${(index + 1) / total * 100}%`;
             scoreEl.textContent = `Score: ${score}`;
             actions.hidden = false;
             showFirstScenarioCoach(q);

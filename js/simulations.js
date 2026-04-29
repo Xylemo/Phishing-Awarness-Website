@@ -267,7 +267,7 @@ function renderScenario(scenario) {
 
 function updateProgress() {
     counter.textContent = `Scenario ${index + 1} of ${scenarios.length}`;
-    const percent = (index / scenarios.length) * 100;
+    const percent = (index + 1) / (scenarios.length) * 100;
     progressFill.style.width = `${percent}%`;
     scoreLabel.textContent = `Score: ${score}`;
 }
