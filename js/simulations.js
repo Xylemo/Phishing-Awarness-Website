@@ -399,10 +399,10 @@ function finish() {
       "Solid run. Review the explanations on the ones you missed and try again.";
   } else if (percent >= 0.5) {
     completeMsg.textContent =
-      "Good start. Check the Warning Signs page for the patterns to watch for.";
+      "Good start. Check the Safety Tips page for the patterns to watch for.";
   } else {
     completeMsg.textContent =
-      "Plenty of room to grow. Read through the Warning Signs page and run it again.";
+      "Plenty of room to grow. Read through the Safety Tips page and run it again.";
   }
 
   complete.hidden = false;
