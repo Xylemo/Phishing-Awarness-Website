@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Enrollment | Lone Star Federal Bank</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            overflow-x: hidden;
+            /* Background logic using backdrop.jpg from your images folder */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('images/backdrop.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .chase-blue-text { color: #0060f0; }
+        .chase-btn { background-color: #0060f0; }
+        .chase-btn:hover { background-color: #004bb8; }
+        .input-field:focus { border-color: #0060f0; box-shadow: 0 0 0 1px #0060f0; }
+        .hidden { display: none; }
+
+        /* Main container styling for the frosted glass effect */
+        #main-content-area, #final-success-container {
+            background-color: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Glitch Animation */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); filter: hue-rotate(90deg); }
+            40% { transform: translate(-5px, -5px); filter: invert(1); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px); filter: hue-rotate(-90deg); }
+            100% { transform: translate(0); }
+        }
+        .glitch-effect {
+            animation: glitch 0.3s linear 3;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen" id="body-tag">
+
+<!-- Simulation Warning Banner -->
+<div class="bg-yellow-400 text-black text-center py-1.5 text-xs font-black uppercase tracking-widest border-b border-yellow-500 relative z-50">
+    THIS IS A SECURE WEBSITE
+</div>
+
+<!-- Header -->
+<header class="bg-white/95 border-b border-gray-200 relative z-50">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <!-- Corrected path for starlogo -->
+            <img src="images/starlogo.png" alt="Lone Star Logo" class="mr-3 h-8 w-auto">
+            <span class="text-xl font-semibold text-gray-800 tracking-tight">Lone Star Federal Bank</span>
+        </div>
+        <a href="index.html" class="text-sm font-semibold chase-blue-text hover:underline">Cancel</a>
+    </div>
+</header>
+
+<main class="flex-grow flex items-center justify-center py-12">
+    <!-- Forms Container -->
+    <div class="max-w-[1000px] mx-auto px-10 py-12 flex flex-col md:flex-row gap-12" id="main-content-area">
+        <!-- Content Left -->
+        <div class="md:w-1/2">
+            <h1 class="text-4xl font-light text-gray-900 leading-tight mb-6" id="main-heading">Enroll in Lone Star Online<sup>&reg;</sup></h1>
+            <p class="text-lg text-gray-600 mb-8 leading-relaxed" id="main-subtext">Set up your user ID and password to manage your accounts.</p>
+
+            <div id="instruction-list-1" class="space-y-6">
+                <div class="flex items-start space-x-4">
+                    <div class="text-blue-600 mt-1"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2" stroke-width="2"/><path d="M7 10h2m-2 4h6"/><circle cx="17" cy="10" r="1"/></svg></div>
+                    <p class="text-sm text-gray-600 font-medium">Have your Social Security or Tax ID number ready.</p>
+                </div>
+            </div>
+
+            <div id="instruction-list-2" class="space-y-6 hidden">
+                <div class="flex items-start space-x-4">
+                    <div class="text-blue-600 mt-1"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div>
+                    <p class="text-sm text-gray-600 font-medium">Please provide your residential address for our records.</p>
+                </div>
+            </div>
+
+            <div id="instruction-list-3" class="space-y-6 hidden">
+                <div class="flex items-start space-x-4">
+                    <div class="text-blue-600 mt-1"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+                    <p class="text-sm text-gray-600 font-medium">Verify your identity with your date of birth.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side Forms -->
+        <div class="md:w-1/2">
+            <div id="error-message" class="hidden mb-4 p-4 bg-red-50 border-l-4 border-red-600">
+                <p id="error-text" class="text-sm text-red-800 font-semibold"></p>
+            </div>
+            <div class="bg-white p-8 border border-gray-200 rounded-lg shadow-sm">
+                <form id="step-1-form" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Account number</label>
+                        <input type="text" id="accountNumber" maxlength="16" class="w-full p-3.5 border border-gray-300 rounded-md outline-none text-lg focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Social Security number</label>
+                        <input type="text" id="ssnInput" maxlength="15" class="w-full p-3.5 border border-gray-300 rounded-md outline-none text-lg focus:border-blue-500">
+                    </div>
+                    <button type="button" onclick="validateStepOne()" class="w-full chase-btn text-white font-bold py-4 rounded-md transition duration-200">Next</button>
+                </form>
+
+                <form id="step-2-form" class="space-y-6 hidden">
+                    <h3 class="text-xl font-semibold text-gray-800 border-b pb-2">Home Address</h3>
+                    <input type="text" id="street" class="w-full p-3.5 border border-gray-300 rounded-md outline-none text-lg" placeholder="123 Main St">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" placeholder="City" class="w-full p-3.5 border border-gray-300 rounded-md text-lg">
+                        <input type="text" id="zip" maxlength="5" placeholder="ZIP" class="w-full p-3.5 border border-gray-300 rounded-md text-lg">
+                    </div>
+                    <button type="button" onclick="validateAddress()" class="w-full chase-btn text-white font-bold py-4 rounded-md transition duration-200">Continue</button>
+                </form>
+
+                <form id="step-3-form" class="space-y-6 hidden">
+                    <h3 class="text-xl font-semibold text-gray-800 border-b pb-2">Personal Info</h3>
+                    <input type="date" id="dob" class="w-full p-3.5 border border-gray-300 rounded-md text-lg">
+                    <button type="button" onclick="showSuccess()" class="w-full chase-btn text-white font-bold py-4 rounded-md transition duration-200">Complete Enrollment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- CENTERED SUCCESS/GLITCH BOX -->
+    <div id="final-success-container" class="hidden w-full max-w-[500px] px-6 py-12">
+        <div class="text-center" id="success-card">
+            <div id="success-content">
+                <div class="flex justify-center mb-6">
+                    <svg class="w-20 h-20 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <h2 class="text-3xl font-light text-gray-900 mb-4">Thank you!</h2>
+                <p class="text-gray-600 text-lg leading-relaxed">Keep an eye out for your welcome letter in the mail.</p>
+            </div>
+
+            <!-- Hidden Glitch Message -->
+            <div id="glitch-content" class="hidden">
+                <div class="flex justify-center mb-6">
+                    <span class="text-6xl">😈</span>
+                </div>
+                <h2 class="text-3xl font-bold text-red-600 mb-4">PHISHED!</h2>
+                <p class="text-gray-900 text-xl font-bold">Thank you for your personal information!</p>
+                <p class="mt-4 text-sm text-gray-500">This was a cybersecurity simulation. Never enter your real SSN or Bank details on unverified sites.</p>
+                <button onclick="location.reload()" class="mt-8 chase-blue-text font-bold underline">Try Simulation Again</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-white/90 border-t border-gray-200 py-10 text-center text-gray-400 text-[10px]">
+    <p>&copy; 2026 Lone Star Federal Bank. Member FDIC. Educational Simulation.</p>
+</footer>
+
+<script>
+    // Formatting and Validation logic
+    document.getElementById('ssnInput').addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '');
+        e.target.value = v.length > 5 ? v.slice(0,3)+' - '+v.slice(3,5)+' - '+v.slice(5,9) : v.length > 3 ? v.slice(0,3)+' - '+v.slice(3,5) : v;
+    });
+
+    function validateStepOne() {
+        if(document.getElementById('accountNumber').value.length === 16 && document.getElementById('ssnInput').value.length === 15) {
+            document.getElementById('step-1-form').classList.add('hidden');
+            document.getElementById('instruction-list-1').classList.add('hidden');
+            document.getElementById('step-2-form').classList.remove('hidden');
+            document.getElementById('instruction-list-2').classList.remove('hidden');
+            document.getElementById('main-heading').innerText = "Where should we send your paperwork?";
+        }
+    }
+
+    function validateAddress() {
+        if(document.getElementById('street').value.length > 5 && document.getElementById('zip').value.length === 5) {
+            document.getElementById('step-2-form').classList.add('hidden');
+            document.getElementById('instruction-list-2').classList.add('hidden');
+            document.getElementById('step-3-form').classList.remove('hidden');
+            document.getElementById('instruction-list-3').classList.remove('hidden');
+            document.getElementById('main-heading').innerText = "Verification required";
+        }
+    }
+
+    function showSuccess() {
+        if (document.getElementById('dob').value) {
+            document.getElementById('main-content-area').classList.add('hidden');
+            document.getElementById('final-success-container').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('success-card').classList.add('glitch-effect');
+                document.getElementById('body-tag').classList.add('glitch-effect');
+
+                setTimeout(() => {
+                    document.getElementById('success-content').classList.add('hidden');
+                    document.getElementById('glitch-content').classList.remove('hidden');
+
+                    confetti({
+                        particleCount: 150,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00']
+                    });
+
+                    document.getElementById('success-card').classList.remove('glitch-effect');
+                    document.getElementById('body-tag').classList.remove('glitch-effect');
+                }, 500);
+            }, 2000);
+        }
+    }
+</script>
+</body>
+</html>

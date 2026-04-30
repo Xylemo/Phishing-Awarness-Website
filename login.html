@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | Lone Star Federal Bank</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('images/house.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .chase-blue { background-color: #0060f0; }
+        .chase-blue-text { color: #0060f0; }
+
+        .login-card {
+            background-color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .hidden { display: none; }
+
+        /* Glitch Animation from enrollment.html */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); filter: hue-rotate(90deg); }
+            40% { transform: translate(-5px, -5px); filter: invert(1); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px); filter: hue-rotate(-90deg); }
+            100% { transform: translate(0); }
+        }
+        .glitch-effect {
+            animation: glitch 0.3s linear 3;
+        }
+    </style>
+</head>
+<body class="flex flex-col" id="body-tag">
+
+<nav class="bg-white py-4 shadow-sm relative z-50">
+    <div class="container mx-auto px-6 flex justify-center items-center">
+        <a href="index.html" class="flex items-center">
+            <img src="images/starlogo.png" alt="Logo" class="h-6 mr-2">
+            <span class="text-xl font-bold text-gray-800">Lone Star Federal Bank</span>
+        </a>
+    </div>
+</nav>
+
+<main class="flex-grow flex items-center justify-center p-6">
+    <div class="login-card p-12 w-full max-w-[450px]" id="login-container">
+
+        <!-- Standard Login Form -->
+        <div id="login-content">
+            <h2 class="text-2xl text-gray-800 mb-10 font-normal">Sign In</h2>
+            <form class="space-y-8">
+                <div class="relative border-b border-gray-300">
+                    <input type="text" id="userInput" placeholder="Username" class="w-full pb-2 outline-none focus:border-blue-600 transition text-lg placeholder-gray-400">
+                </div>
+
+                <div class="relative border-b border-gray-300">
+                    <input type="password" id="passInput" placeholder="Password" class="w-full pb-2 outline-none focus:border-blue-600 transition text-lg placeholder-gray-400">
+                </div>
+
+                <div class="flex items-center">
+                    <input type="checkbox" id="remember" class="w-4 h-4 rounded text-blue-600">
+                    <label for="remember" class="ml-3 text-sm text-gray-600">Remember me</label>
+                </div>
+
+                <button type="button" onclick="handleLogin()" class="w-full chase-blue text-white font-bold py-3.5 rounded-md shadow-md hover:bg-blue-700 transition">
+                    Sign In
+                </button>
+
+                <div class="text-center pt-6">
+                    <p class="text-sm text-gray-500">Not a customer? <a href="enrollment.html" class="chase-blue-text font-bold hover:underline">Enroll now</a></p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Glitch Message (Hidden initially) -->
+        <div id="glitch-content" class="hidden text-center">
+            <div class="flex justify-center mb-6">
+                <span class="text-6xl">⚠️</span>
+            </div>
+            <h2 class="text-3xl font-bold text-red-600 mb-4">SECURITY BREACH</h2>
+            <p class="text-gray-900 text-xl font-bold">Credentials Harvested!</p>
+            <p class="mt-4 text-sm text-gray-600">This was a simulated phishing attack. You just handed over your login details to a fake site.</p>
+            <button onclick="location.reload()" class="mt-8 chase-blue-text font-bold underline">Back to Login</button>
+        </div>
+
+    </div>
+</main>
+
+<footer class="py-6 text-center">
+    <p class="text-[10px] text-white/80 uppercase tracking-widest font-bold drop-shadow-md">Educational Simulation Only</p>
+</footer>
+
+<script>
+    function handleLogin() {
+        const user = document.getElementById('userInput').value;
+        const pass = document.getElementById('passInput').value;
+
+        if (user && pass) {
+            // Trigger the glitch effect after a brief delay
+            setTimeout(() => {
+                document.getElementById('login-container').classList.add('glitch-effect');
+                document.getElementById('body-tag').classList.add('glitch-effect');
+
+                setTimeout(() => {
+                    // Swap content
+                    document.getElementById('login-content').classList.add('hidden');
+                    document.getElementById('glitch-content').classList.remove('hidden');
+
+                    // Confetti trigger
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#ff0000', '#000000', '#ffffff']
+                    });
+
+                    // Remove glitch classes so user can read the message
+                    document.getElementById('login-container').classList.remove('glitch-effect');
+                    document.getElementById('body-tag').classList.remove('glitch-effect');
+                }, 500);
+            }, 500);
+        } else {
+            alert("Please fill in both fields.");
+        }
+    }
+</script>
+
+</body>
+</html>
