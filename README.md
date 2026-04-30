@@ -135,8 +135,7 @@ Submit changes as a **Pull Request (PR)** using VS Code's built-in Source Contro
 2. Hover over each changed file and click **`+`** to **stage** it
 3. Type a short, descriptive **commit message** at the top
 
-   > ✅ `"Add quiz question about URL spoofing"`  
-   > ❌ `"changes"` or `"update"`
+   > `"Add quiz question about URL spoofing"`  
 
 4. Click the **checkmark ✓** to commit
 5. Click **"Publish Branch"** or **"Push"** to upload to GitHub
